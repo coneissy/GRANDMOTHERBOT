@@ -13,17 +13,16 @@ from .models import PoolSwap
 
 
 def demo() -> None:
-    prices = {"WETH": Decimal("3500"), "USDC": Decimal("1"), "DAI": Decimal("1")}
+    prices = {"WETH": Decimal("3500"), "USDC": Decimal("1")}
     swaps = (
         PoolSwap("pool-1", "uniswap_v3", "WETH", "USDC", Decimal("1"), Decimal("3490")),
-        PoolSwap("pool-2", "uniswap_v3", "USDC", "DAI", Decimal("3490"), Decimal("3490")),
     )
     effective = reconstruct_effective_trade(swaps, prices)
     points = tuple(
         MarkoutPoint(
             Decimal("-1.0") + Decimal("0.5") * i,
-            Decimal("3500") + Decimal(i) * Decimal("0.5"),
             Decimal("1"),
+            Decimal("3500") - Decimal(i) * Decimal("0.5"),
         )
         for i in range(23)
     )
