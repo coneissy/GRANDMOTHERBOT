@@ -1,5 +1,8 @@
 paper:
   arxiv: "2507.13023v3"
+  arxiv_id: "2507.13023"
+  arxiv_version: "v3"
+  arxiv_api: "https://export.arxiv.org/api/query?id_list=2507.13023v3"
   start_block: 17866488
   end_block: 21998438
   start_date: "2023-08-08"
