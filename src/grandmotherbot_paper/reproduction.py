@@ -71,7 +71,11 @@ def compute_searcher_tstars(markouts: pd.DataFrame) -> pd.DataFrame:
     rows=[]
     for label,obs in by_searcher.items():
         profile=published_searcher_profile(label) if label in KNOWN_PATTERN_BY_SEARCHER else None
-        t=optimal_horizon(obs)
+        # The paper excludes Pattern 3 searchers from revenue/PnL estimation.
+        if profile and profile["pattern"] == 3:
+            t=None
+        else:
+            t=optimal_horizon(obs)
         rows.append({"searcher_label":label,"computed_t_star_s":t,"published_t_star_s":profile["optimal_execution_horizon_s"] if profile else None})
     return pd.DataFrame(rows)
 
