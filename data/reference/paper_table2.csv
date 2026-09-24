@@ -1,0 +1,4 @@
+builder_searcher,total_blocks,bid_value_usd,builder_profit_usd,builder_margin,searcher_pnl_usd,aggregated_profit_usd,aggregated_margin
+beaverbuild-SCP,1603780,402870000,66680000,0.0669,11050000,77730000,0.0792
+rsync-Wintermute,543564,156780000,9650000,-0.0224,14770000,24420000,0.2706
+Titan,1206806,266800000,92440000,0.0585,,92440000,0.0585
