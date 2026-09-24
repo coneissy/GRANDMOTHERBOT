@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from statistics import median
-
 from .models import HedgeObservation, MarkoutPoint, SearcherPattern
 
 HORIZONS = tuple(Decimal("-1.0") + Decimal("0.5") * i for i in range(23))
@@ -42,7 +40,7 @@ def median_gr_curve(observations: list[HedgeObservation]) -> dict[Decimal, Decim
             if pts:
                 vals.append(gross_return(obs, pts[0]))
         if vals:
-            curve[h] = Decimal(str(median([float(v) for v in vals])))
+            ordered = sorted(vals)\n            n = len(ordered)\n            if n % 2:\n                curve[h] = ordered[n // 2]\n            else:\n                curve[h] = (ordered[n // 2 - 1] + ordered[n // 2]) / Decimal("2")
     return curve
 
 
