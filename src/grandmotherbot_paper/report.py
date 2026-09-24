@@ -59,7 +59,7 @@ def compute_t_star(markouts: pd.DataFrame) -> pd.DataFrame:
     med=m.groupby(["searcher_label","horizon_s"],as_index=False)["gr"].median()
     out=[]
     for searcher,g in med.groupby("searcher_label"):
-        profile=published_searcher_profile(searcher) if searcher in dict(all_published_profiles()) else None
+        profile=published_searcher_profile(searcher) if searcher in KNOWN_PATTERN_BY_SEARCHER else None
         if profile and profile["pattern"]==3:
             continue
         best=g["gr"].max()
