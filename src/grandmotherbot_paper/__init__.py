@@ -5,6 +5,7 @@ from .markout import MarkoutPoint, TradeObservation, markout_revenue, gross_retu
 from .profitability import estimated_ev, estimated_pnl, profit_margin, inventory_adjustment_like
 from .builder import builder_profit_usd, aggregated_profit, is_subsidized_block, is_exclusive_searcher
 from .patterns import published_searcher_profile, all_published_profiles
+from .searcher_analysis import summarize_searchers
 
 __all__ = [
     "HORIZONS", "MAJOR_TOKENS", "PAPER_START_BLOCK", "PAPER_END_BLOCK",
