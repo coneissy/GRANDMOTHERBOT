@@ -72,7 +72,8 @@ def parse_identifier(identifier: str) -> tuple[str, str]:
     match = VERSION_RE.fullmatch(value)
     if not match:
         raise ArxivVerificationError(f"Invalid arXiv identifier: {identifier!r}")
-    return match.group("id"), f"v{match.group("version") or "1"}"
+    version = match.group("version") or "1"
+    return match.group("id"), f"v{version}"
 
 
 def _parse_datetime(value: str) -> datetime:
@@ -101,8 +102,12 @@ def parse_api_response(xml_text: str) -> ArxivPaperMetadata:
     if not authors or any(not author for author in authors):
         raise ArxivVerificationError("arXiv response did not contain valid authors")
 
-    published = _parse_datetime((entry.findtext("atom:published", namespaces=ATOM_NS) or "").strip())
-    updated = _parse_datetime((entry.findtext("atom:updated", namespaces=ATOM_NS) or "").strip())
+    published = _parse_datetime(
+        (entry.findtext("atom:published", namespaces=ATOM_NS) or "").strip()
+    )
+    updated = _parse_datetime(
+        (entry.findtext("atom:updated", namespaces=ATOM_NS) or "").strip()
+    )
 
     return ArxivPaperMetadata(
         arxiv_id=base_id,
