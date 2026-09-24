@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from email.utils import parsedate_to_datetime
 import json
 import re
 from typing import Mapping
@@ -77,7 +76,7 @@ def parse_identifier(identifier: str) -> tuple[str, str]:
 
 
 def _parse_datetime(value: str) -> datetime:
-    return parsedate_to_datetime(value).astimezone(timezone.utc)
+    return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
 
 
 def parse_api_response(xml_text: str) -> ArxivPaperMetadata:
