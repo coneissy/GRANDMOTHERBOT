@@ -151,16 +151,20 @@ def verify_metadata(
     expected_id = str(expected["identifier"])
     expected_title = " ".join(str(expected["title"]).split())
     expected_authors = tuple(str(author) for author in expected["authors"])
-    expected_published = datetime.fromisoformat(str(expected["published"]))
-    expected_updated = datetime.fromisoformat(str(expected["updated"]))
-
-    return ArxivVerification(
-        expected_identifier=expected_id,
-        actual_identifier=f"{metadata.arxiv_id}{metadata.version}",
-        title_match=metadata.title == expected_title,
-        authors_match=metadata.authors == expected_authors,
-        published_match=metadata.published == expected_published,
-        updated_match=metadata.updated == expected_updated,
+    expected_published_raw = str(expected["published"])
+    expected_updated_raw = str(expected["updated"])
+    expected_published = datetime.fromisoformat(expected_published_raw)
+    expected_updated = datetime.fromisoformat(expected_updated_raw)
+    published_match = (
+        metadata.published.date() == expected_published.date()
+        if len(expected_published_raw) == 10
+        else metadata.published == expected_published
+    )
+    updated_match = (
+        metadata.updated.date() == expected_updated.date()
+        if len(expected_updated_raw) == 10
+        else metadata.updated == expected_updated
+    )
     )
 
 
