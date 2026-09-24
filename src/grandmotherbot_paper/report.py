@@ -17,7 +17,12 @@ from .constants import (
 )
 from .identification import CandidateTransaction, passes_all_heuristics
 from .liquidity import pair_class
-from .reproduction import builder_report, score, compute_searcher_tstars
+from .reproduction import (
+    build_effective_token_pairs,
+    builder_report,
+    score,
+    compute_searcher_tstars,
+)
 from .searcher_analysis import summarize_searchers
 from .section5 import (
     gross_return_cdf,
@@ -132,10 +137,18 @@ def build_report(input_dir: str, output_dir: str) -> dict:
     token_pairs_path = root / "token_pairs.csv"
     if token_pairs_path.exists():
         token_pairs = pd.read_csv(token_pairs_path)
-        liquidity_regime(token_pairs).to_csv(
+    elif (root / "swaps.csv").exists():
+        token_pairs = build_effective_token_pairs(identified, pd.read_csv(root / "swaps.csv"))
+        token_pairs.to_csv(out / "reconstructed_token_pairs.csv", index=False)
+    else:
+        token_pairs = None
+
+    if token_pairs is not None:
+        labeled = token_pairs[token_pairs.searcher_label.astype(str).isin(KNOWN_PATTERN_BY_SEARCHER)]
+        liquidity_regime(labeled).to_csv(
             out / "section5_liquidity_regime.csv", index=False
         )
-        hedge_liquidity_correlation(token_pairs, markouts).to_csv(
+        hedge_liquidity_correlation(labeled, markouts).to_csv(
             out / "section5_hedge_liquidity_correlation.csv", index=False
         )
 
