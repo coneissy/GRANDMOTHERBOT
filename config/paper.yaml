@@ -1,0 +1,36 @@
+paper:
+  arxiv: "2507.13023v3"
+  start_block: 17866488
+  end_block: 21998438
+  start_date: "2023-08-08"
+  end_date: "2025-03-08"
+  cex: "Binance"
+  quote_currency: "USDT"
+  usdt_usd_assumption: 1.0
+  markout_start_s: -1.0
+  markout_end_s: 10.0
+  markout_step_s: 0.5
+  exclusive_threshold: 0.50
+  ultra_sound_activation_block: 18719819
+  ultra_sound_refund_change_utc: "2024-03-05T05:00:00Z"
+  ultra_sound_refund_before: 1.0
+  ultra_sound_refund_after: 0.5
+
+major_tokens:
+  - WETH
+  - WBTC
+  - USDT
+  - USDC
+  - TUSD
+  - FDUSD
+  - BUSD
+  - DAI
+
+sources:
+  dune_dex_trades: "https://dune.com/queries/4931834"
+  dune_bot_labels: "https://dune.com/queries/3375615"
+  dune_atomic_mev: "https://dune.com/queries/3493305"
+  dune_sandwiches: "https://dune.com/hildobby/sandwiches"
+  tardis: "https://docs.tardis.dev/historical-data-details/binance"
+  relayscan: "https://www.relayscan.io/builder-profit"
+  ultra_sound: "https://github.com/ultrasoundmoney/docs/blob/main/bid_adjustment.md"
