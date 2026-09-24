@@ -80,7 +80,7 @@ def test_inventory_adjustment_is_excluded_from_markout_observation():
     )
     obs = TradeObservation(
         Decimal("1"),
-        Decimal("99"),
+        Decimal("99.1"),
         Decimal("100"),
         Decimal("0"),
         points,
