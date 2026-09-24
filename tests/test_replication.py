@@ -7,6 +7,9 @@ from grandmotherbot_paper.builder import (
     aggregated_profit,
     aggregated_profit_margin,
     builder_profit_usd,
+    builder_profit_eth,
+    builder_profit_from_eth_usd,
+    eth_to_usd,
     is_exclusive_searcher,
     is_subsidized_block,
 )
@@ -101,6 +104,11 @@ def test_builder_profit_with_ultra_sound():
     after = datetime(2024, 4, 1, tzinfo=timezone.utc)
     assert builder_profit_usd(Decimal("10"), Decimal("4"), True, Decimal("2"), before) == Decimal("8")
     assert builder_profit_usd(Decimal("10"), Decimal("4"), True, Decimal("2"), after) == Decimal("7")
+    assert builder_profit_eth(Decimal("10"), Decimal("4"), True, Decimal("2"), after) == Decimal("7")
+    assert eth_to_usd(Decimal("2"), Decimal("3000")) == Decimal("6000")
+    assert builder_profit_from_eth_usd(
+        Decimal("10"), Decimal("4"), True, Decimal("2"), Decimal("3000"), after
+    ) == Decimal("21000")
     assert aggregated_profit(Decimal("8"), Decimal("3")) == Decimal("11")
     assert aggregated_profit_margin(Decimal("11"), Decimal("4"), Decimal("2"), before, True) == Decimal("11") / (Decimal("11") + Decimal("4") - Decimal("2"))
 
