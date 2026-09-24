@@ -13,7 +13,7 @@ import requests
 
 ARXIV_API_URL = "https://export.arxiv.org/api/query"
 ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
-VERSION_RE = re.compile(r"(?P<id>\\d{4}\\.\\d{4,5})(?:v(?P<version>\\d+))?$")
+VERSION_RE = re.compile(r"(?P<id>\d{4}\.\d{4,5})(?:v(?P<version>\d+))?$")
 
 
 class ArxivVerificationError(RuntimeError):
