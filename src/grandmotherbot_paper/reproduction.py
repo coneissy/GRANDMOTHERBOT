@@ -193,6 +193,55 @@ def score(
     return pd.DataFrame(rows)
 
 
+def build_effective_token_pairs(
+    transactions: pd.DataFrame,
+    swaps: pd.DataFrame,
+) -> pd.DataFrame:
+    """Reconstruct the final bought/sold pair from sequential DEX swaps."""
+    required_tx = {"tx_hash", "searcher_label", "volume_usd"}
+    missing_tx = required_tx - set(transactions.columns)
+    if missing_tx:
+        raise ValueError(
+            "transactions missing token-pair fields: " + ", ".join(sorted(missing_tx))
+        )
+
+    required_swaps = {
+        "tx_hash", "log_index", "token_in", "token_out", "amount_in", "amount_out"
+    }
+    missing_swaps = required_swaps - set(swaps.columns)
+    if missing_swaps:
+        raise ValueError(
+            "swaps missing reconstruction fields: " + ", ".join(sorted(missing_swaps))
+        )
+
+    reconstructed = reconstruct(swaps)
+    tx = transactions.copy()
+    tx["tx_hash"] = tx.tx_hash.astype(str)
+    tx = tx.drop_duplicates("tx_hash").set_index("tx_hash")
+
+    rows = []
+    for tx_hash, effective in reconstructed.items():
+        if tx_hash not in tx.index:
+            continue
+        source = tx.loc[tx_hash]
+        if pd.isna(source.searcher_label) or pd.isna(source.volume_usd):
+            continue
+        rows.append(
+            {
+                "tx_hash": tx_hash,
+                "searcher_label": str(source.searcher_label),
+                "token_a": effective.token_bought,
+                "token_b": effective.token_sold,
+                "volume_usd": float(source.volume_usd),
+            }
+        )
+
+    return pd.DataFrame(
+        rows,
+        columns=["tx_hash", "searcher_label", "token_a", "token_b", "volume_usd"],
+    )
+
+
 def pair_mix_from_scored(
     scored: pd.DataFrame,
     token_pairs: pd.DataFrame,
