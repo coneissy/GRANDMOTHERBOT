@@ -38,6 +38,8 @@ class ArxivVerification:
     authors_match: bool
     published_match: bool
     updated_match: bool
+    actual_published: str = ""
+    actual_updated: str = ""
 
     @property
     def version_match(self) -> bool:
@@ -62,6 +64,8 @@ class ArxivVerification:
             "authors_match": self.authors_match,
             "published_match": self.published_match,
             "updated_match": self.updated_match,
+            "actual_published": self.actual_published,
+            "actual_updated": self.actual_updated,
             "status": "PASS" if self.passed else "FAIL",
         }
 
@@ -172,6 +176,8 @@ def verify_metadata(
         authors_match=metadata.authors == expected_authors,
         published_match=published_match,
         updated_match=updated_match,
+        actual_published=metadata.published.isoformat(),
+        actual_updated=metadata.updated.isoformat(),
     )
 
 
