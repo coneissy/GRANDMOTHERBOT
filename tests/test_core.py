@@ -6,6 +6,7 @@ from grandmother.heuristics import passes_heuristics, heuristic_report
 from grandmother.markout import HORIZONS, optimal_horizon
 from grandmother.models import CandidateTransaction, HedgeObservation, MarkoutPoint, PoolSwap
 from grandmother.reconstruction import reconstruct_effective_trade
+from grandmother.research import persistently_fails_to_cover_base_fees
 
 
 def candidate(**overrides):
@@ -87,6 +88,13 @@ def test_ev_pnl_margin_and_negative_ev_margin():
     losing = TradeEconomics(Decimal("10"), Decimal("20"), Decimal("10"))
     assert losing.estimated_ev_usd == Decimal("-10")
     assert losing.profit_margin is None
+
+
+def test_inventory_adjustment_filter():
+    offsets = [Decimal("0") for _ in range(23)]
+    obs = make_obs(offsets)
+    assert persistently_fails_to_cover_base_fees(obs, Decimal("1"))
+    assert not persistently_fails_to_cover_base_fees(obs, Decimal("0"))
 
 
 def test_subsidy_definition():
