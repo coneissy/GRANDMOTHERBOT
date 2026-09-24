@@ -5,7 +5,13 @@ from decimal import Decimal
 
 import pandas as pd
 
-from .builder import builder_profit_usd, aggregated_profit, is_subsidized_block
+from .builder import (
+    aggregated_profit,
+    aggregated_profit_margin,
+    builder_profit_from_eth_usd,
+    builder_profit_usd,
+    is_subsidized_block,
+)
 from .constants import HORIZONS, PAPER_END_BLOCK, PAPER_START_BLOCK
 from .identification import CandidateTransaction, passes_all_heuristics
 from .liquidity import pair_class
@@ -212,13 +218,32 @@ def builder_report(builder_blocks: pd.DataFrame) -> pd.DataFrame:
         from datetime import datetime
 
         slot_time = pd.to_datetime(row.slot_time, utc=True).to_pydatetime()
-        builder_profit = builder_profit_usd(
-            Decimal(str(row.delta_coinbase_usd)),
-            Decimal(str(row.bid_value_usd)),
-            _bool(row.bid_adjusted),
-            Decimal(str(row.bid_adjustment_delta_usd)),
-            slot_time,
-        )
+        if {
+            "delta_coinbase_eth",
+            "bid_value_eth",
+            "bid_adjustment_delta_eth",
+            "eth_usdt_mid",
+        }.issubset(builder_blocks.columns):
+            builder_profit = builder_profit_from_eth_usd(
+                Decimal(str(row.delta_coinbase_eth)),
+                Decimal(str(row.bid_value_eth)),
+                _bool(row.bid_adjusted),
+                Decimal(str(row.bid_adjustment_delta_eth)),
+                Decimal(str(row.eth_usdt_mid)),
+                slot_time,
+            )
+            bid_value_usd = Decimal(str(row.bid_value_eth)) * Decimal(str(row.eth_usdt_mid))
+            adjustment_usd = Decimal(str(row.bid_adjustment_delta_eth)) * Decimal(str(row.eth_usdt_mid))
+        else:
+            builder_profit = builder_profit_usd(
+                Decimal(str(row.delta_coinbase_usd)),
+                Decimal(str(row.bid_value_usd)),
+                _bool(row.bid_adjusted),
+                Decimal(str(row.bid_adjustment_delta_usd)),
+                slot_time,
+            )
+            bid_value_usd = Decimal(str(row.bid_value_usd))
+            adjustment_usd = Decimal(str(row.bid_adjustment_delta_usd))
         searcher_pnl = (
             Decimal(str(row.searcher_pnl_usd))
             if "searcher_pnl_usd" in row and pd.notna(row.searcher_pnl_usd)
@@ -232,10 +257,12 @@ def builder_report(builder_blocks: pd.DataFrame) -> pd.DataFrame:
                 "builder_profit_usd": builder_profit,
                 "searcher_pnl_usd": searcher_pnl,
                 "aggregated_profit_usd": aggregate,
-                "aggregated_profit_margin": (
-                    builder_profit / (builder_profit + Decimal(str(row.bid_value_usd)))
-                    if False
-                    else None
+                "aggregated_profit_margin": aggregated_profit_margin(
+                    aggregate,
+                    bid_value_usd,
+                    adjustment_usd,
+                    slot_time,
+                    _bool(row.bid_adjusted),
                 ),
                 "subsidized": is_subsidized_block(builder_profit, aggregate),
             }
