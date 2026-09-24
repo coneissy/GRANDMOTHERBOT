@@ -17,6 +17,8 @@ from .identification import CandidateTransaction, passes_all_heuristics
 from .liquidity import pair_class
 from .searcher_analysis import summarize_searchers
 from .reproduction import builder_report
+from .patterns import published_searcher_profile, all_published_profiles
+from .landscape import daily_counts_and_volume, weekly_searcher_volume, weekly_hhi
 
 def as_bool(value) -> bool:
     if isinstance(value, bool):
@@ -51,9 +53,15 @@ def compute_t_star(markouts: pd.DataFrame) -> pd.DataFrame:
     m=markouts.copy()
     m["mr_usd"]=m["amount_a"]*m["token_a_usdt_mid"]-m["amount_b"]*m["token_b_usdt_mid"]-m["cex_taker_fees_usd"]
     m["gr"]=m["mr_usd"]/m["dex_volume_usd"]
+    complete=m.groupby("tx_hash")["horizon_s"].nunique().eq(len(HORIZONS))
+    complete_txs=set(complete[complete].index)
+    m=m[m.tx_hash.isin(complete_txs)]
     med=m.groupby(["searcher_label","horizon_s"],as_index=False)["gr"].median()
     out=[]
     for searcher,g in med.groupby("searcher_label"):
+        profile=published_searcher_profile(searcher) if searcher in dict(all_published_profiles()) else None
+        if profile and profile["pattern"]==3:
+            continue
         best=g["gr"].max()
         chosen=g[g["gr"]==best]["horizon_s"].max()
         out.append({"searcher_label":searcher,"computed_t_star_s":chosen,"median_gr_at_t_star":best})
@@ -118,6 +126,10 @@ def build_report(input_dir: str, output_dir: str) -> dict:
     if not trades.empty:
         trades.to_csv(out/"trade_profitability.csv",index=False)
         summarize_searchers(trades, markouts).to_csv(out/"searcher_profitability.csv",index=False)
+    if {"slot_time","tx_hash","volume_usd","searcher_label"}.issubset(identified.columns):
+        daily_counts_and_volume(identified).to_csv(out/"daily_landscape.csv",index=False)
+        weekly_searcher_volume(identified).to_csv(out/"weekly_searcher_volume.csv",index=False)
+        weekly_hhi(identified, "volume_usd").to_csv(out/"weekly_volume_hhi.csv",index=False)
     if (root/"builder_blocks.csv").exists():
         blocks=pd.read_csv(root/"builder_blocks.csv")
         builder_report(blocks).to_csv(out/"builder_profitability.csv",index=False)
