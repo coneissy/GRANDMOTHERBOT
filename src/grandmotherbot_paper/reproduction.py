@@ -13,6 +13,7 @@ from .markout import MarkoutPoint, TradeObservation, median_gr_curve, optimal_ho
 from .profitability import estimated_ev, estimated_pnl, profit_margin, inventory_adjustment_like
 from .reconstruction import Swap, reconstruct_effective_trade
 from .patterns import published_searcher_profile
+from .constants import KNOWN_PATTERN_BY_SEARCHER
 
 def _bool(v):
     return str(v).strip().lower() in {"1","true","t","yes","y"}
@@ -69,7 +70,7 @@ def compute_searcher_tstars(markouts: pd.DataFrame) -> pd.DataFrame:
             by_searcher[label].append(obs)
     rows=[]
     for label,obs in by_searcher.items():
-        profile=published_searcher_profile(label) if label in {x for x in searcher_by_tx.values()} else None
+        profile=published_searcher_profile(label) if label in KNOWN_PATTERN_BY_SEARCHER else None
         t=optimal_horizon(obs)
         rows.append({"searcher_label":label,"computed_t_star_s":t,"published_t_star_s":profile["optimal_execution_horizon_s"] if profile else None})
     return pd.DataFrame(rows)
