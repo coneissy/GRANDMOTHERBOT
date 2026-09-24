@@ -18,7 +18,7 @@ One row per swap log in a transaction.
 Required columns:
 `tx_hash,log_index,dex,pool,token_in,token_out,amount_in,amount_out`
 
-The reconstruction stage aggregates sequential swaps and removes intermediate tokens.
+The reconstruction stage aggregates sequential swap flows by token and reduces intermediate tokens.
 
 ## markouts.csv
 
@@ -27,16 +27,29 @@ One row for every available trade/horizon price observation.
 Required columns:
 `tx_hash,horizon_s,token_a_usdt_mid,token_b_usdt_mid,cex_taker_fees_usd,dex_volume_usd`
 
+For profitability estimation also provide:
+`amount_a,amount_b,base_fees_usd,builder_tips_usd`
+
 Expected horizons are exactly -1.0 through +10.0 seconds in 0.5-second increments.
 
 ## builder_blocks.csv
 
 One row per winning block used by Appendix G.
 
-Required columns:
-`block_number,builder,slot_time,delta_coinbase_usd,bid_value_usd,bid_adjusted,bid_adjustment_delta_usd,searcher_pnl_usd,ofa_refund_usd`
+Preferred raw/ETH fields, matching the paper's calculation order:
+`block_number,builder,slot_time,delta_coinbase_eth,bid_value_eth,bid_adjusted,bid_adjustment_delta_eth,eth_usdt_mid,searcher_pnl_usd,ofa_refund_usd`
 
-For a non-adjusted block, the paper's builder profit is the coinbase balance difference. For an Ultra Sound-adjusted block it is delta_coinbase - original bid + refund_rate * delta.
+The paper computes builder profit in ETH:
+- without Ultra Sound adjustment: DeltaCoinbase
+- with adjustment: DeltaCoinbase - original bid + refund_rate * adjustment delta
+
+Then converts that ETH builder profit to USD using the **ETH-USDT mid-price at the corresponding slot time**.
+
+For pre-normalized inputs, the legacy USD fields
+`delta_coinbase_usd,bid_value_usd,bid_adjustment_delta_usd`
+remain supported, but they are a convenience path rather than the preferred raw representation.
+
+Ultra Sound refund rate is 100% before 2024-03-05 05:00 UTC and 50% after that cutoff.
 
 ## cex_tokens.csv
 
