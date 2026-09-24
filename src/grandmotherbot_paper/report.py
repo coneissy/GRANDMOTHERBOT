@@ -15,6 +15,8 @@ from .constants import (
 from .concentration import hhi
 from .identification import CandidateTransaction, passes_all_heuristics
 from .liquidity import pair_class
+from .searcher_analysis import summarize_searchers
+from .reproduction import builder_report
 
 def as_bool(value) -> bool:
     if isinstance(value, bool):
@@ -115,6 +117,10 @@ def build_report(input_dir: str, output_dir: str) -> dict:
     trades=evaluate_trades(markouts,tstar)
     if not trades.empty:
         trades.to_csv(out/"trade_profitability.csv",index=False)
+        summarize_searchers(trades, markouts).to_csv(out/"searcher_profitability.csv",index=False)
+    if (root/"builder_blocks.csv").exists():
+        blocks=pd.read_csv(root/"builder_blocks.csv")
+        builder_report(blocks).to_csv(out/"builder_profitability.csv",index=False)
     summary={
         "paper_period":{"start_block":PAPER_START_BLOCK,"end_block":PAPER_END_BLOCK,"start_date":PAPER_START_DATE,"end_date":PAPER_END_DATE},
         "horizons":list(map(str,HORIZONS)),
