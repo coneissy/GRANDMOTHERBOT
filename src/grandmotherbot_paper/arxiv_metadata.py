@@ -165,6 +165,14 @@ def verify_metadata(
         if len(expected_updated_raw) == 10
         else metadata.updated == expected_updated
     )
+
+    return ArxivVerification(
+        expected_identifier=expected_id,
+        actual_identifier=f"{metadata.arxiv_id}{metadata.version}",
+        title_match=metadata.title == expected_title,
+        authors_match=metadata.authors == expected_authors,
+        published_match=published_match,
+        updated_match=updated_match,
     )
 
 
