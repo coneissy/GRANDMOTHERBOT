@@ -1,0 +1,7 @@
+source_id: 030
+name: Flashbots League of Legends dashboard
+type: MEV_builder_searcher_dashboard
+url: https://dune.com/flashbots/lol
+role: MEV_searcher_builder_relationship_context
+grandmother_modules: [GM01, GM03, GM04, GM05]
+use: secondary_searcher_builder_observation_and_historical_crosscheck
