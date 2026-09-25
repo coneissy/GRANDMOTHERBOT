@@ -1,0 +1,7 @@
+source_id: 063
+name: mevboost.pics
+type: builder_relay_dashboard
+url: https://mevboost.pics/
+role: MEV_Boost_builder_and_relay_observation
+grandmother_modules: [GM04, GM05, GM06]
+use: secondary_builder_relay_cross_check
