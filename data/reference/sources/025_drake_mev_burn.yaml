@@ -1,0 +1,8 @@
+source_id: 025
+name: MEV burn - a simple design
+type: Ethereum_protocol_design_research
+url: https://ethresear.ch/t/mev-burn-a-simple-design/15590
+author: Justin Drake
+role: MEV_burn_bid_timing_and_value_capture_context
+grandmother_modules: [GM04, GM05, GM06]
+use: builder_bid_cutoff_refund_and_burn_sensitivity
