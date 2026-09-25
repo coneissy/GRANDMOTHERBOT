@@ -1,0 +1,9 @@
+source_id: 070
+name: High-Frequency Trading on Decentralized On-Chain Exchanges
+type: empirical_D​EX_microstructure_research
+url: https://arxiv.org/abs/2009.14021
+authors: [Liyi Zhou, Kaihua Qin, Christof Ferreira Torres, Duc V Le, Arthur Gervais]
+year: 2021
+role: DEX_latency_priority_and_adversarial_trading
+grandmother_modules: [GM01, GM02, GM06]
+use: latency_order_position_and_MEV_execution_context
