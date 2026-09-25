@@ -1,0 +1,7 @@
+source_id: 029
+name: Illuminating Ethereum's Order Flow Landscape
+type: Flashbots_research_article
+url: https://writings.flashbots.net/illuminate-the-order-flow
+role: private_orderflow_and_PBS_market_structure_context
+grandmother_modules: [GM04, GM05, GM06]
+use: orderflow_routing_builder_access_and_exclusive_flow_context
