@@ -1,0 +1,7 @@
+source_id: 044
+name: Competition for Retail Order Flow and Market Quality
+type: market_microstructure_empirical_research
+url: https://ssrn.com/abstract=4070056
+role: internalization_concentration_and_market_quality_context
+grandmother_modules: [GM05, GM06]
+use: conceptual_support_for_HHI_and_private_flow_market_quality_analysis
