@@ -1,0 +1,8 @@
+source_id: 032
+name: Flashbots MEV-Boost
+type: PBS_builder_market_infrastructure
+url: https://docs.flashbots.net/flashbots-mev-boost/
+github: https://github.com/flashbots/mev-boost
+role: validator_to_relay_to_builder_market_infrastructure
+grandmother_modules: [GM04, GM05, GM07]
+use: builder_relay_model_and_PBS_architecture_context
