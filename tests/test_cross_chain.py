@@ -65,4 +65,4 @@ def test_same_chain_activity_is_not_called_cross_chain():
     event = LayerZeroEvent(
         "0xa", datetime(2024, 1, 1, tzinfo=timezone.utc), 101, 101
     )
-    assert not event.cross
+    assert not event.cross_chain
