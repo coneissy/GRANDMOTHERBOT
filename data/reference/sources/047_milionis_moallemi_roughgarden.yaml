@@ -1,0 +1,7 @@
+source_id: 047
+name: Automated Market Making and Arbitrage Profits in the Presence of Fees
+type: theoretical_AMM_arbitrage_research
+url: https://arxiv.org/abs/2305.14604
+role: fee_adjusted_arbitrage_profit_model
+grandmother_modules: [GM02, GM03, GM06]
+use: fee_and_block_time_sensitivity_of_arbitrage_profit
