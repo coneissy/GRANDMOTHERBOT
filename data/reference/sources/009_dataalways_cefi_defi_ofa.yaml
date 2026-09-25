@@ -1,0 +1,12 @@
+source_id: 009
+name: The Influence of CeFi-DeFi Arbitrage on Order-Flow Auction Bid Profiles
+type: empirical_mev_builder_research
+author: Data Always
+url: https://ethresear.ch/t/the-influence-of-cefi-defi-arbitrage-on-order-flow-auction-bid-profiles/17258
+publication_date: 2023-10-31
+study_window: 2023-01-01_to_2023-09-30
+inputs: Binance_ETHUSDT_1s_Klines; mevboost_pics; OFA_bid_data_from_Flashbots_UltraSound_Agnostic_bloXroute
+role: high_volatility_integrated_builder_bid_profile_context
+grandmother_modules: [GM04, GM05, GM06]
+direct_reuse: test_late_bid_profile_shapes_and_builder_integration_controls
+important_limitation: authors_frame_scope_as_proof_of_concept_and_focus_on_ETH_USDT_volatility
