@@ -1,0 +1,7 @@
+source_id: 051
+name: Who Wins Ethereum Block Building Auctions and Why?
+type: empirical_builder_auction_research
+url: https://arxiv.org/abs/2407.13931
+role: builder_market_competition_and_exclusive_orderflow
+grandmother_modules: [GM04, GM05, GM06]
+use: builder_market_share_profitability_orderflow_diversity_and_exclusivity_controls
