@@ -88,3 +88,44 @@ provenance_sources:
   - https://dune.com/queries/4931834
   - https://dune.com/queries/3375615
   - https://dune.com/queries/3493305
+
+query_engine_architecture:
+  engine: Trino_based_DuneSQL
+  storage: Parquet
+  table_management: Delta_Lake
+  delta_capabilities:
+    - ACID_transactions
+    - schema_evolution
+    - time_travel
+    - upserts_and_deletes
+    - data_versioning
+  scan_hierarchy:
+    - file
+    - row_group
+    - column_chunk
+    - page
+  pruning:
+    - Parquet_min_max_statistics
+    - time_partitioning
+  common_partition_keys:
+    - block_time
+    - block_date
+    - block_number
+  runtime_behavior:
+    - dynamic_filtering
+    - stream_processing
+    - spill_to_disk_when_memory_is_insufficient
+grandmother_query_requirements:
+  - use_explicit_time_predicates_on_large_tables
+  - select_only_required_columns
+  - keep_blockchain_filters_inside_relevant_scans_and_joins
+  - preserve_query_text_and_execution_metadata
+  - record_source_table_versions_when_available
+  - do_not_assume_current_table_contents_equal_historical_table_state
+  - use_incremental_models_for_expanding_historical_datasets
+research_reproducibility_implication:
+  Delta_time_travel_and_versioning_can_help_reconstruct_table_state_but_only_when_source_version_metadata_is_preserved.
+performance_implication:
+  GM01_full_period_queries_should_be_partition_aware_and_column_selective_to_reduce_data_scanned.
+provenance_source:
+  https://docs.dune.com/query-engine/dunesql-architecture
