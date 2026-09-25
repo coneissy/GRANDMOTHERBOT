@@ -1,0 +1,9 @@
+source_id: 024
+name: Committee-driven MEV smoothing
+type: Ethereum_protocol_design_research
+url: https://ethresear.ch/t/committee-driven-mev-smoothing/10408
+author: Francesco D'Amato
+role: MEV_distribution_and_consensus_design_context
+grandmother_modules: [GM04, GM05, GM06]
+use: protocol_level_MEV_redistribution_context
+historical_rule: background_only_unless_specific_protocol_variable_is_tested
