@@ -1,0 +1,7 @@
+source_id: 060
+name: Builder Dominance and Searcher Dependence
+type: builder_searcher_market_research
+url: https://frontier.tech/builder-dominance-and-searcher-dependence
+role: builder_searcher_flow_dependence_and_subsidization_context
+grandmother_modules: [GM04, GM05, GM06]
+use: builder_dependence_searcher_flow_and_exclusivity_analysis
