@@ -49,8 +49,8 @@ data/reference/sources/
 
 Reference status:
 
-| ID | Source | Status |
-| --- | --- | --- |
+| 001 | Arkham | fetched and normalized |
+| 002 | CoinMarketCap | fetched and normalized |
 001 | Arkham | fetched and normalized |
 002 | CoinMarketCap | fetched and normalized |
 003 | Dune Analytics | fetched and normalized |
