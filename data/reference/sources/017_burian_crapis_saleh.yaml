@@ -1,0 +1,11 @@
+source_id: 017
+name: MEV Capture and Decentralization in Execution Tickets
+type: academic_economic_model
+url: https://arxiv.org/abs/2408.11255
+authors: [Jonah Burian, Davide Crapis, Fahad Saleh]
+year: 2024
+role: execution_ticket_mev_capture_and_builder_capital_model
+grandmother_modules: [GM04, GM05, GM06]
+use: theoretical_context_for_capital_cost_risk_aversion_builder_concentration
+current_arxiv_version_checked: v1
+source_note: arXiv provides PDF HTML and TeX source links
