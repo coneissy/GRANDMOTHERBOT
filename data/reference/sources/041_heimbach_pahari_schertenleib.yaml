@@ -1,0 +1,7 @@
+source_id: 041
+name: Non-Atomic Arbitrage in Decentralized Finance
+type: empirical_CEX_D​EX_and_cross_domain_MEV_research
+url: https://arxiv.org/abs/2401.01622
+role: foundational_non_atomic_arbitrage_benchmark
+grandmother_modules: [GM01, GM02, GM03, GM04, GM06]
+use: compare_detection_centralization_and_CEX_D​EX_methodology
