@@ -1,0 +1,9 @@
+source_id: 022
+name: Statistical Arbitrage on AMMs and Block Building on Ethereum Part 1
+type: empirical_builder_and_stat_arb_research
+url: https://greenfieldcapital.com/2024/09/10/statistical-arbitrage-on-amms-and-block-building-on-ethereum-part-1/
+authors: [Christoph Rosenmayr, Mateusz Dominiak]
+publication_date: 2024-09-10
+role: statistical_arbitrage_and_block_building_context
+grandmother_modules: [GM01, GM03, GM04, GM05, GM06]
+use: compare_stat_arb_volume_builder_integration_and_market_dominance_findings
