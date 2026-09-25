@@ -1,0 +1,6 @@
+source_id: 045
+name: Performance of Algorithmic Trading Orders: Size, Speed, and Volume
+type: execution_microstructure_research
+role: size_speed_volume_execution_context
+grandmother_modules: [GM02, GM03, GM06]
+use: size_conditioned_latency_and_market_impact_robustness
