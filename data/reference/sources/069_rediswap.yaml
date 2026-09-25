@@ -1,0 +1,9 @@
+source_id: 069
+name: RediSwap: MEV Redistribution Mechanism for CFMMs
+type: MEV_redistribution_protocol_research
+url: https://arxiv.org/abs/2410.18434
+authors: [Mengqian Zhang, Sen Yang, Fan Zhang]
+year: 2024
+role: MEV_redistribution_and_CFMM_design
+grandmother_modules: [GM04, GM05, GM06]
+use: alternative_MEV_capture_and_redistribution_mechanism_context
