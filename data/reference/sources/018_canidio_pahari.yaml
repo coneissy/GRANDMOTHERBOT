@@ -1,0 +1,11 @@
+source_id: 018
+name: Becoming Immutable: How Ethereum is Made
+type: empirical_block_construction_research
+url: https://arxiv.org/abs/2506.04940
+authors: [Andrea Canidio, Vabuk Pahari]
+current_version_checked: v4
+current_version_date: 2026-05-04
+role: nonwinning_block_and_builder_competition_dataset_context
+grandmother_modules: [GM04, GM05, GM06]
+use: candidate_block_comparison_exclusive_tx_inclusion_delay_and_cex_dex_arbitrage_context
+important: current paper reports proposed and nonwinning block observations unavailable in normal winning-block-only data
