@@ -5,6 +5,8 @@ from .markout import MarkoutPoint, TradeObservation, markout_revenue, gross_retu
 from .profitability import estimated_ev, estimated_pnl, profit_margin, inventory_adjustment_like
 from .builder import builder_profit_usd, aggregated_profit, is_subsidized_block, is_exclusive_searcher
 from .patterns import published_searcher_profile, all_published_profiles
+from .gm02 import BboPoint, FillResult, PairHedgeResult, OrderBookState, markout_return, simulate_fill, simulate_pair_hedge
+from .tardis import TardisHTTPClient, TardisAPIError, normalize_binance_event
 from .searcher_analysis import summarize_searchers
 
 __all__ = [
@@ -16,4 +18,7 @@ __all__ = [
     "estimated_ev", "estimated_pnl", "profit_margin", "inventory_adjustment_like",
     "builder_profit_usd", "aggregated_profit", "is_subsidized_block",
     "is_exclusive_searcher",
+    "BboPoint", "FillResult", "PairHedgeResult", "OrderBookState",
+    "markout_return", "simulate_fill", "simulate_pair_hedge",
+    "TardisHTTPClient", "TardisAPIError", "normalize_binance_event",
 ]
