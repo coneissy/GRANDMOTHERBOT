@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "grandmotherbot-paper-replication"
-version = "0.2.0"
-description = "Clean-room replication of arXiv:2507.13023v3"
+version = "0.3.0"
+description = "Clean-room replication of arXiv:2507.13023v3 with GrandMother CEX market reconstruction"
 requires-python = ">=3.11"
 dependencies = [
   "pandas>=2.2",
@@ -16,6 +16,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+tardis = ["tardis-dev>=5.0,<6"]
+parquet = ["pyarrow>=17"]
+
+[project.scripts]
+grandmother-paper = "grandmotherbot_paper.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
