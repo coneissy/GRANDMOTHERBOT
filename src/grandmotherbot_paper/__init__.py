@@ -8,6 +8,7 @@ from .patterns import published_searcher_profile, all_published_profiles
 from .gm02 import BboPoint, FillResult, PairHedgeResult, OrderBookState, markout_return, simulate_fill, simulate_pair_hedge
 from .tardis import TardisHTTPClient, TardisAPIError, normalize_binance_event
 from .searcher_analysis import summarize_searchers
+from .cross_chain import LayerZeroEvent, CrossChainProfile, parse_dune_layerzero_rows, build_cross_chain_profiles, attach_cross_chain_features, bridge_activity_score
 
 __all__ = [
     "HORIZONS", "MAJOR_TOKENS", "PAPER_START_BLOCK", "PAPER_END_BLOCK",
@@ -21,4 +22,6 @@ __all__ = [
     "BboPoint", "FillResult", "PairHedgeResult", "OrderBookState",
     "markout_return", "simulate_fill", "simulate_pair_hedge",
     "TardisHTTPClient", "TardisAPIError", "normalize_binance_event",
+    "LayerZeroEvent", "CrossChainProfile", "parse_dune_layerzero_rows",
+    "build_cross_chain_profiles", "attach_cross_chain_features", "bridge_activity_score",
 ]
