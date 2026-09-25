@@ -1,0 +1,7 @@
+source_id: 043
+name: MEV Sandwich Trades
+type: Dune_dashboard
+url: https://dune.com/hildobby/sandwiches
+role: sandwich_activity_reference
+grandmother_modules: [GM01, GM06]
+use: sandwich_exclusion_validation_and_MEV_context
