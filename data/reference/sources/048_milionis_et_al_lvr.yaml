@@ -1,0 +1,7 @@
+source_id: 048
+name: Automated Market Making and Loss-Versus-Rebalancing
+type: theoretical_AMM_LVR_research
+url: https://arxiv.org/abs/2208.06046
+role: LVR_and_AMM_adverse_selection_model
+grandmother_modules: [GM02, GM03, GM06]
+use: distinguish_arbitrage_profit_from_LP_loss_and_market_risk
