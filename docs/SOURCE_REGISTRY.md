@@ -54,7 +54,7 @@ Reference status:
 | 001 | Arkham | fetched and normalized |
 | 002 | CoinMarketCap | fetched and normalized |
 | 003 | Dune Analytics | fetched and normalized |
-| 004 | Etherscan | pending |
+| 004 | Etherscan | fetched and normalized |
 | 005-071 | Remaining references | pending |
 
 The numbered artifacts are the research Data Center layer. Each record should
