@@ -40,3 +40,24 @@ Relayscan + Ultra Sound -> builder economics
 Each source is retained with its role so that GrandMother can distinguish
 replication inputs from extensions and avoid silently changing the paper's
 baseline methodology.
+
+## Reference-by-reference Data Center
+
+Each supplied bibliography reference receives a numbered source artifact under:
+
+data/reference/sources/
+
+Reference status:
+
+| ID | Source | Status |
+| --- | --- | --- |
+| 001 | Arkham | fetched and normalized |
+| 002 | CoinMarketCap | pending |
+| 003 | Dune Analytics | pending |
+| 004 | Etherscan | pending |
+| 005-071 | Remaining references | pending |
+
+The numbered artifacts are the research Data Center layer. Each record should
+separate the source's original role from any GrandMother extension, preserve
+retrieval/version information, and identify the exact GM module that can consume
+the source.
