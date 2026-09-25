@@ -43,7 +43,7 @@ The paper computes builder profit in ETH:
 - without Ultra Sound adjustment: DeltaCoinbase
 - with adjustment: DeltaCoinbase - original bid + refund_rate * adjustment delta
 
-Then converts that ETH builder profit to USD using the **ETH-USDT mid-price at the corresponding slot time**.
+Then converts that ETH builder profit to USD using the ETH-USDT mid-price at the corresponding slot time.
 
 For pre-normalized inputs, the legacy USD fields
 `delta_coinbase_usd,bid_value_usd,bid_adjustment_delta_usd`
@@ -60,9 +60,79 @@ Required columns:
 
 Use the cross-checked contract addresses, not symbols alone.
 
-## searcher_labels.csv
+## GM02 Tardis market data
 
-Included in `data/reference/` from Appendix A of the paper.
+GM02 consumes Binance Spot Tardis historical data and preserves the distinction between exchange timestamps and Tardis capture timestamps.
+
+### Recommended raw feeds
+
+- `trade`: individual Binance executions
+- `bookTicker`: native best bid/ask
+- `depth`: incremental L2 updates
+- `depthSnapshot`: Tardis-generated initial order-book snapshots
+
+### Canonical normalized event
+
+The extractor stores:
+
+`exchange,channel,symbol,exchange_timestamp_us,local_timestamp_us,capture_sequence,event_type,trade_id,book_update_id,first_update_id,final_update_id,side,price,amount,best_bid,best_bid_amount,best_ask,best_ask_amount,bids_json,asks_json,is_snapshot,generated,raw_message`
+
+The canonical ordering key is:
+`(local_timestamp_us,capture_sequence)`.
+
+For Binance `bookTicker`, the native payload has no documented event timestamp, so `exchange_timestamp_us` remains null and `local_timestamp_us` is the observation clock.
+
+### GM02 source policy
+
+Paper-compatible baseline:
+`bookTicker -> mid-price markout`
+
+Execution-cost extension:
+`depthSnapshot + depth -> reconstructed book -> executable VWAP`
+
+### Storage
+
+Use Parquet for normalized events once the optional `parquet` extra is installed:
+
+```bash
+pip install -e ".[tardis,parquet]"
+```
+
+Raw Tardis JSON should remain auditable and should never contain API credentials.
+
+## GM02 CLI
+
+Check the Tardis entitlement and Binance dataset metadata:
+
+```bash
+grandmother-paper tardis-key-info
+grandmother-paper tardis-binance
+```
+
+Fetch a narrow historical pilot window:
+
+```bash
+export TARDIS_API_KEY="..."
+grandmother-paper tardis-fetch \
+  --start 2024-01-14T00:00:00Z \
+  --end 2024-01-14T00:00:10Z \
+  --symbols BTCUSDT ETHUSDT \
+  --channels trade bookTicker \
+  --output data/tardis/pilot.ndjson
+```
+
+For canonical Parquet:
+
+```bash
+grandmother-paper tardis-fetch \
+  --start 2024-01-14T00:00:00Z \
+  --end 2024-01-14T00:00:10Z \
+  --symbols BTCUSDT ETHUSDT \
+  --channels trade bookTicker depth depthSnapshot \
+  --output data/tardis/pilot.parquet
+```
+
+Do not paste a Tardis API key into SQL, notebooks, Git, issue comments, or source code.
 
 ## Paper period
 
