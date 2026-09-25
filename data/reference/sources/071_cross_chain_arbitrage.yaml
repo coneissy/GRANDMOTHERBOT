@@ -1,0 +1,12 @@
+source_id: 071
+name: Cross-Chain Arbitrage: The Next Frontier of MEV in Decentralized Finance
+type: empirical_cross_chain_MEV_research
+url: https://arxiv.org/abs/2501.17335
+authors: [Burak Öz, Christof Ferreira Torres, Christoph Schlegel, Bruno Mazorra, Jonas Gebele, Filip Rezabek, Florian Matthes]
+year: 2025
+journal_version: Proceedings of the ACM on Measurement and Analysis of Computing Systems, 9(3), 51:1-51:33
+doi: 10.1145/3771566
+role: cross_chain_arbitrage_and_MEV_research
+grandmother_modules: [GM01, GM03, GM04, GM06]
+use: cross_chain_candidate_fingerprint_bridge_activity_and_market_structure_comparison
+research_rule: cross_chain_activity_features_are_supporting_evidence_and_do_not_prove_that_a_specific_CEX_D​EX_trade_used_a_bridge_or_was_cross_chain
