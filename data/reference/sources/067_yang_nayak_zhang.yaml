@@ -1,0 +1,8 @@
+source_id: 067
+name: Decentralization of Ethereum's Builder Market
+type: empirical_builder_market_research
+url: https://doi.org/10.1109/SP61157.2025.00157
+arxiv: https://arxiv.org/abs/2405.01329
+role: builder_concentration_and_proposer_loss_analysis
+grandmother_modules: [GM04, GM05, GM06]
+use: HHI_proposer_loss_and_builder_market_structure_cross_check
