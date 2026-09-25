@@ -1,0 +1,10 @@
+source_id: 019
+name: Empirical Analysis of Cross Domain CEX DEX Arbitrage on Ethereum
+type: empirical_cex_dex_mev_research
+url: https://ethresear.ch/t/empirical-analysis-of-cross-domain-cex-dex-arbitrage-on-ethereum/17620
+authors: [Colin Chan, Thomas Thiery, Julian Ma, Barnabé Monnot]
+role: early_empirical_cex_dex_detection_and_builder_searcher_context
+grandmother_modules: [GM01, GM03, GM04, GM06]
+use: methodology_comparison_and_historical_benchmark
+study_window_reported: 2023-05-05_to_2023-07-16
+reported_observation: top_of_block_CEX_D​EX_arbitrages_and_priority_access
