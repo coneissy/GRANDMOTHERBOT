@@ -1,0 +1,8 @@
+source_id: 046
+name: Angstrom
+type: DEX_execution_and_orderflow_infrastructure
+url: https://x.com/angstromxyz/status/1889725902851854520
+role: concentrated_liquidity_and_MEV_protection_context
+grandmother_modules: [GM01, GM02, GM06]
+use: protocol_specific_execution_and_arbitrage_context
+source_type: social_post_reference
