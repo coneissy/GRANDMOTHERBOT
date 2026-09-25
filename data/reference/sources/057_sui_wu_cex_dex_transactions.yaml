@@ -1,0 +1,7 @@
+source_id: 057
+name: CEX-DEX Transactions 202308-202503
+type: Dune_saved_query
+url: https://dune.com/queries/4931834
+role: primary_CEX_D​EX_candidate_dataset
+grandmother_modules: [GM01, GM02, GM03, GM04, GM05, GM06, GM07]
+use: paper_replication_candidate_generation
