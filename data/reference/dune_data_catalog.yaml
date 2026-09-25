@@ -1,0 +1,17 @@
+sources:
+  - name: arbitrum.transactions
+    category: evm_raw_transaction
+    chain: arbitrum
+    url: https://dune.com/data/arbitrum.transactions
+    docs_url: https://docs.dune.com/data-catalog/evm/arbitrum/raw/transactions
+    role:
+      - recover_initiating_sender
+      - transaction_metadata
+      - join_layerzero_call_tx_hash
+    join_key: hash
+    canonical_sender_column: from
+    provenance_note: >
+      Used by the supplied LayerZero Endpoint_call_send query to recover the
+      transaction initiator for each successful Arbitrum send.
+    research_scope: cross_chain_activity_fingerprint
+    interpretation: descriptive_activity_only
