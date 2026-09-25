@@ -1,0 +1,9 @@
+source_id: 005
+name: libMEV
+type: mev_research_dashboard
+url: https://libmev.com/
+role: searcher_and_bundle_level_mev_observation
+grandmother_modules: [GM01, GM04, GM05, GM06]
+use: secondary_cross_check_for_arbitrage_searcher_and_bundle_activity
+limitations: dashboard_data_availability_and_current_ui_may_change; do_not_replace_primary_Dune_replication
+provenance: preserve_query_or_dashboard_url_and_retrieval_timestamp
