@@ -1,0 +1,67 @@
+source_id: 001
+name: Arkham
+type: blockchain_intelligence
+paper_reference_role: external_reference
+grandmother_role: secondary_attribution_and_entity_resolution
+ui_url: https://intel.arkm.com/
+base_url: https://api.arkm.com
+docs_url: https://arkm.com/api/docs
+llms_url: https://arkm.com/llms.txt
+current_doc_version: v1.1.0
+current_doc_last_checked: 2026-09-25
+coverage: 20+ chains
+data_model:
+  - addresses
+  - entities
+  - labels
+  - tags
+core_principles:
+  - entity_first
+  - confidence_scored
+  - living_intelligence
+relevant_endpoints:
+  address_intelligence: GET /intelligence/address/{address}/all
+  address_batch: POST /intelligence/address/batch/all
+  address_updates: GET /intelligence/addresses/updates
+  search: GET /intelligence/search
+  entity: GET /intelligence/entity/{entity}
+  balances: GET /balances/address/{address}
+  flow: GET /flow/address/{address}
+  history: GET /history/address/{address}
+  counterparties: GET /counterparties/address/{address}
+  transfers: GET /transfers
+  transaction: GET /tx/{hash}
+  portfolio_timeseries: GET /portfolio/timeSeries/address/{address}
+  chains: GET /chains
+grandmother_use:
+  - secondary_searcher_attribution
+  - cex_wallet_cross_check
+  - builder_infrastructure_cross_check
+  - address_clustering
+  - fund_flow_context
+  - manual_review_support
+evidence_policy:
+  primary_detection_source: Dune
+  token_verification_sources: Etherscan_and_CoinMarketCap
+  arkham_is_extension: true
+  do_not_replace_historical_labels_without_versioned_evidence: true
+  snapshot_retrieval_timestamp_required: true
+recommended_record:
+  - chain
+  - address
+  - entity
+  - label
+  - tags
+  - confidence
+  - retrieval_timestamp
+  - source_endpoint
+  - response_hash
+  - api_version
+key_handling: environment_only
+research_warning: Arkham attribution is probabilistic and living intelligence, so current labels can change over time.
+provenance_sources:
+  - https://intel.arkm.com/
+  - https://arkm.com/api/docs
+  - https://arkm.com/llms.txt
+  - https://info.arkm.com/announcements/arkham-api-upgrade-real-time-intel
+  - https://info.arkm.com/announcements/the-new-arkham-api
