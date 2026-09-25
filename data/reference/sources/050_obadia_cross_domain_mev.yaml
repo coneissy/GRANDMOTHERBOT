@@ -1,0 +1,7 @@
+source_id: 050
+name: Unity is Strength: A Formalization of Cross-Domain Maximal Extractable Value
+type: cross_domain_MEV_theory
+url: https://arxiv.org/abs/2112.01472
+role: cross_domain_MEV_formalism
+grandmother_modules: [GM01, GM04, GM06]
+use: formalize_multi_domain_value_and_cross_chain_conflict_or_collusion_questions
