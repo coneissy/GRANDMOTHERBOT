@@ -1,0 +1,8 @@
+source_id: 056
+name: CEX-DEX Bots Label List
+type: Dune_saved_query
+url: https://dune.com/queries/3375615
+role: searcher_and_bot_label_source
+grandmother_modules: [GM01, GM03, GM06]
+use: searcher_attribution_and_bot_label_cross_check
+provenance: preserve_query_id_execution_id_and_version
