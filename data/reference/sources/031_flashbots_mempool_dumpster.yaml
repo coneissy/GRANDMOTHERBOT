@@ -1,0 +1,10 @@
+source_id: 031
+name: Flashbots Mempool Dumpster
+type: mempool_transaction_archive
+url: https://github.com/flashbots/mempool-dumpster
+archive_url: https://mempool-dumpster.flashbots.net
+license: CC-0
+role: public_mempool_observation_and_inclusion_latency
+grandmother_modules: [GM01, GM04, GM06, GM07]
+use: observed_public_mempool_filter_and_latency_controls
+schema_fields: [timestamp, hash, chainId, txType, from, to, value, nonce, gas, gasPrice, gasTipCap, gasFeeCap, sources, includedAtBlockHeight, includedBlockTimestamp, inclusionDelayMs, rawTx]
