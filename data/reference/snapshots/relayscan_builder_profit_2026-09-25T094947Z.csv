@@ -1,4 +1,4 @@
-snapshot_time_utc,builder,blocks,blocks_profit,blocks_subsidy,profit_total_eth,subsidies_total_eth,source_url
+snapshot_time_utc,builder,blocks,blocks_profit,blocks_subsidy,profit_total_source_units,subsidies_total_source_units,source_url
 2026-09-25T09:49:47Z,Titan (titanbuilder.xyz),3454,3453,0,99.2504,0.0000,https://www.relayscan.io/builder-profit
 2026-09-25T09:49:47Z,BuilderNet,1438,1438,0,27.0746,0.0000,https://www.relayscan.io/builder-profit
 2026-09-25T09:49:47Z,Quasar (quasar.win),1238,1236,1,6.5102,0.0001,https://www.relayscan.io/builder-profit
