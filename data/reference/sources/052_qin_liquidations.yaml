@@ -1,0 +1,7 @@
+source_id: 052
+name: An Empirical Study of DeFi Liquidations: Incentives, Risks, and Instabilities
+type: empirical_defi_liquidation_research
+url: https://doi.org/10.1145/3487552.3487841
+role: liquidation_MEV_and_risk_context
+grandmother_modules: [GM01, GM03, GM06]
+use: liquidation_exclusion_validation_and_risk_controls
