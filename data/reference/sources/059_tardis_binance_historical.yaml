@@ -1,0 +1,8 @@
+source_id: 059
+name: Binance Spot Historical Data
+type: Tardis_historical_market_data
+url: https://docs.tardis.dev/historical-data-details/binance
+role: primary_historical_CEX_market_source
+grandmother_modules: [GM02, GM03, GM06, GM07]
+use: trade_BBO_depth_and_markout_reconstruction
+feeds: [trade, bookTicker, depth, depthSnapshot, book_snapshot_25, incremental_book_L2]
