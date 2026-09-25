@@ -36,6 +36,7 @@ Etherscan + CoinMarketCap -> token-list / contract verification
 Arkham -> secondary entity attribution
 Tardis -> historical Binance market reconstruction
 Relayscan + Ultra Sound -> builder economics
+Relayscan snapshots -> point-in-time builder-market observatory
 
 Each source is retained with its role so that GrandMother can distinguish
 replication inputs from extensions and avoid silently changing the paper's
