@@ -1,0 +1,9 @@
+source_id: 068
+name: Execution Welfare Across Solver-based DEXes
+type: empirical_solver_D​EX_research
+url: https://arxiv.org/abs/2503.00738
+authors: [Yuki Yuminaga, Dex Chen, Danning Sui]
+year: 2025
+role: solver_execution_welfare_and_inventory_depth
+grandmother_modules: [GM02, GM03, GM06]
+use: filler_solver_execution_price_and_trade_size_controls
