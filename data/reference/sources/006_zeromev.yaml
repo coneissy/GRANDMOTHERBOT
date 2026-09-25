@@ -1,0 +1,10 @@
+source_id: 006
+name: ZeroMEV
+type: mev_protection_and_mev_data
+url: https://zeromev.org/
+role: transaction_reordering_and_MEV_observation
+api: documented_by_ZeroMEV
+grandmother_modules: [GM01, GM05, GM06]
+use: secondary_ME​V_and_reordering_cross_check
+limitations: coverage_and_label_methodology_must_be_verified_for_each_historical_snapshot
+provenance: preserve_endpoint_or_snapshot_and_retrieval_timestamp
