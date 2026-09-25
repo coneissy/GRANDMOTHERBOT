@@ -1,0 +1,56 @@
+gm02:
+  role: "Binance Spot historical market reconstruction"
+  study_anchor_timezone: "UTC"
+  extraction_window:
+    before_seconds: 1
+    after_seconds: 5
+  robustness_window:
+    before_seconds: 2
+    after_seconds: 10
+  horizons_seconds:
+    - -1.0
+    - -0.5
+    - 0.0
+    - 0.5
+    - 1.0
+    - 1.5
+    - 2.0
+    - 2.5
+    - 3.0
+    - 3.5
+    - 4.0
+    - 4.5
+    - 5.0
+    - 5.5
+    - 6.0
+    - 6.5
+    - 7.0
+    - 7.5
+    - 8.0
+    - 8.5
+    - 9.0
+    - 9.5
+    - 10.0
+  baseline:
+    channel: "bookTicker"
+    reference_policy: "last_at_or_before"
+    target_policy: "first_at_or_after"
+  executable:
+    l2_channel: "depth"
+    snapshot_channel: "depthSnapshot"
+    max_levels: 25
+  channels:
+    - "trade"
+    - "bookTicker"
+    - "depth"
+    - "depthSnapshot"
+  symbol_limit_per_filter: 50
+  credential_env: "TARDIS_API_KEY"
+
+sources:
+  tardis_binance: "https://docs.tardis.dev/historical-data-details/binance"
+  tardis_http: "https://docs.tardis.dev/api/http-api-reference"
+  tardis_python: "https://docs.tardis.dev/python-client/replaying-historical-data"
+  tardis_csv: "https://docs.tardis.dev/downloadable-csv-files/data-types"
+  tardis_instruments: "https://docs.tardis.dev/api/instruments-metadata-api"
+  binance_spot_ws: "https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams"
