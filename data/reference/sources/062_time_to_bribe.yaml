@@ -1,0 +1,7 @@
+source_id: 062
+name: Time to Bribe: Measuring Block Construction Market
+type: empirical_PBS_research
+url: https://arxiv.org/abs/2305.16468
+role: builder_relay_market_timing_and_bid_value
+grandmother_modules: [GM04, GM05, GM06]
+use: bid_timing_builder_market_share_relay_dynamics_and_mev_time_law
