@@ -506,7 +506,7 @@ class TardisHTTPClient:
         )
         return events
 
-    async def python_replay(
+    def python_replay(
         self,
         *,
         from_date: str | datetime,
@@ -557,6 +557,38 @@ class TardisHTTPClient:
                     yield event
 
         return _replay()
+
+    def download_datasets(
+        self,
+        *,
+        from_date: str,
+        to_date: str,
+        symbols: Sequence[str],
+        data_types: Sequence[str],
+        download_dir: str | Path = "data/tardis/datasets",
+    ) -> Any:
+        """Download Tardis normalized CSV datasets using tardis-dev."""
+        try:
+            from tardis_dev import datasets
+        except ImportError as exc:
+            raise RuntimeError(
+                "Install the optional Tardis extra with `pip install -e .[tardis]`."
+            ) from exc
+
+        if not symbols:
+            raise ValueError("at least one symbol is required")
+        if not data_types:
+            raise ValueError("at least one dataset type is required")
+
+        return datasets.download(
+            exchange="binance",
+            data_types=list(data_types),
+            from_date=from_date,
+            to_date=to_date,
+            symbols=[binance_api_symbol(symbol) for symbol in symbols],
+            api_key=self.api_key,
+            download_dir=str(download_dir),
+        )
 
 
 def write_normalized_parquet(
