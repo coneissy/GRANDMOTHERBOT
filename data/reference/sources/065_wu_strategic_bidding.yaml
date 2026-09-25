@@ -1,0 +1,7 @@
+source_id: 065
+name: Strategic Bidding Wars in On-chain Auctions
+type: game_theoretic_builder_auction_research
+url: https://arxiv.org/abs/2312.14510
+role: MEV_Boost_strategic_bid_model
+grandmother_modules: [GM04, GM05, GM06]
+use: simulate_latency_and_MEV_access_effects_on_bidding
