@@ -1,0 +1,8 @@
+source_id: 040
+name: Ethereum's Proposer-Builder Separation: Promises and Realities
+type: empirical_PBS_research
+url: https://www.research-collection.ethz.ch/entities/publication/4f76414d-2c97-481c-b9a9-1223f9ef33fb
+role: empirical_PBS_and_relay_structure
+grandmother_modules: [GM04, GM05, GM07]
+use: builder_relay_mapping_private_transactions_and_attribution
+associated_data_repository: https://github.com/liobaheimbach/Ethereum-s-Proposer-Builder-Separation-Promises-and-Realities
