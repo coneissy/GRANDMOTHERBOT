@@ -121,7 +121,18 @@ grandmother-paper tardis-fetch \
   --output data/tardis/pilot.ndjson
 ```
 
-For whole-range normalized Tardis CSV acquisition, use the maintained `tardis-dev` dataset downloader. Tardis documents daily gzip CSVs and non-inclusive `to_date` semantics.\n\n```bash\ngrandmother-paper tardis-download \\\n  --from-date 2024-01-01 \\\n  --to-date 2024-02-01 \\\n  --symbols BTCUSDT ETHUSDT \\\n  --data-types trades book_ticker book_snapshot_25 incremental_book_L2 \\\n  --download-dir data/tardis/datasets\n```\n\nFor canonical Parquet:
+For whole-range normalized Tardis CSV acquisition, use the maintained `tardis-dev` dataset downloader. Tardis documents daily gzip CSVs and non-inclusive `to_date` semantics.
+
+```bash
+grandmother-paper tardis-download \
+  --from-date 2024-01-01 \
+  --to-date 2024-02-01 \
+  --symbols BTCUSDT ETHUSDT \
+  --data-types trades book_ticker book_snapshot_25 incremental_book_L2 \
+  --download-dir data/tardis/datasets
+```
+
+For canonical Parquet:
 
 ```bash
 grandmother-paper tardis-fetch \
