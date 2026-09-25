@@ -1,0 +1,11 @@
+source_id: 015
+name: Binance Spot Trading Fee Rate
+type: exchange_fee_schedule
+url: https://www.binance.com/fee/trading
+role: CEX_execution_cost_parameter
+grandmother_modules: [GM02, GM03, GM06]
+current_public_schedule_checked: 2026-09-25
+important_rule: fee_is_account_tier_pair_and_product_dependent
+current_page_observation: regular_spot_maker_taker_schedule_lists_0.10_percent_each_for_the_standard_global_spot_schedule
+historical_replication_rule: do_not_use_current_fee_schedule_as_historical_fee_without_matching_the_paper_account_or_fee_assumption
+sensitivity: support_multiple_fee_regimes_and_account_tiers
