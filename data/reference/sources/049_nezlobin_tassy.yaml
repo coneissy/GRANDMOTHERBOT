@@ -1,0 +1,7 @@
+source_id: 049
+name: Loss-Versus-Rebalancing under Deterministic and Generalized Block-Times
+type: theoretical_AMM_block_time_research
+url: https://arxiv.org/abs/2505.05113
+role: block_time_distribution_and_LVR_model
+grandmother_modules: [GM02, GM06]
+use: block_time_robustness_and_timing_sensitivity
