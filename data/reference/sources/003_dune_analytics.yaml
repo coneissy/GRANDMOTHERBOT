@@ -1,0 +1,90 @@
+source_id: 003
+name: Dune Analytics
+type: blockchain_data_platform
+reference_url: https://dune.com/home
+docs_url: https://docs.dune.com/
+paper_reference_role: primary_onchain_data_platform
+grandmother_role: primary_ethereum_detection_and_data_delivery
+current_catalog_checked: 2026-09-25
+architecture:
+  layers:
+    - raw
+    - decoded
+    - curated
+  access:
+    - web_app
+    - data_api
+    - datashare
+    - dbt_connector
+grandmother_core_data_families:
+  - ethereum_transactions
+  - ethereum_traces
+  - ethereum_blocks
+  - dex_trades
+  - token_transfers
+  - labels
+  - cex_flows
+  - cex_addresses
+  - bridges
+  - gas_and_fees
+  - prices
+  - token_metadata
+  - flashbots_partner_data
+  - layerzero_data
+paper_and_project_queries:
+  - query_4931834_cex_dex_transactions
+  - query_3375615_cex_dex_bot_labels
+  - query_3493305_atomic_mev
+  - query_3375587_dex_trading_bot
+  - query_5049600_cex_deposits
+  - query_3169619_optional_mev_router_support
+  - query_4931834_layerzero_execution_when_applicable
+important_tables_for_grandmother:
+  ethereum.transactions: transaction-level sender, recipient, value, gas, calldata, receipt data
+  ethereum.traces: internal calls and value transfers
+  ethereum.blocks: block timing and base fee context
+  dex.trades: normalized DEX execution records
+  cex.flows: known exchange-related flows with entity identification
+  cex.addresses: known CEX address registry
+  bridges.flows: cross-chain bridge transfer flows
+  gas_and_fees: transaction fee components
+  labels: address/entity attribution
+  prices: curated token price series
+  token_metadata: token identity fields including contract addresses
+  partner_flashbots: builder, MEV, or order-flow datasets where available
+data_policy:
+  primary_detection: Dune SQL and source tables
+  historical_cutoff: preserve the exact paper query boundary for replication
+  corrected_analysis: permit versioned fixes such as half_open_time_windows and explicit_null_handling
+  provenance_required:
+    - query_id
+    - execution_id
+    - query_version
+    - execution_timestamp
+    - datasets_used
+    - parameters
+    - row_count
+    - GrandMother_commit
+critical_semantics:
+  - mev_value_is_not_searcher_pnl
+  - cex_flow_is_not_proof_of_hedge_execution
+  - bridge_activity_is_not_proof_of_cross_chain_arbitrage
+  - labels_are_attribution_evidence_not_ground_truth
+  - curated_data_does_not_replace_raw_data_when_exact_reconstruction_is_required
+research_modules:
+  GM01: candidate_detection_and_filter_funnel
+  GM03: searcher_pnl_support
+  GM04: builder_and_mev_auction_support
+  GM05: market_structure_and_HHI
+  GM06: robustness_and_bias_controls
+  GM07: reproducibility_and_provenance
+current_catalog_evidence:
+  documented_categories_include_DEX_trades_CEX_flows_bridges_labels_gas_prices_token_metadata_and_partner_Flashbots_data: true
+  documented_ethereum_and_arbitrum_raw_coverage: true
+provenance_sources:
+  - https://dune.com/home
+  - https://docs.dune.com/data-catalog
+  - https://docs.dune.com/api-reference/overview/introduction
+  - https://dune.com/queries/4931834
+  - https://dune.com/queries/3375615
+  - https://dune.com/queries/3493305
