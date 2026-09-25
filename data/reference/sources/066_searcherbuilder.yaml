@@ -1,0 +1,9 @@
+source_id: 066
+name: Searcher-Builder Relationship Dashboard
+type: open_source_MEV_dashboard
+url: https://www.searcherbuilder.pics/
+github: https://github.com/winnsterx/searcherbuilder.pics
+role: onchain_searcher_to_builder_flow_and_vertical_integration_context
+grandmother_modules: [GM01, GM03, GM04, GM05, GM06]
+use: searcher_dominance_builder_dependency_and_integration_cross_check
+data_limitation: dashboard_uses_onchain_landed_transactions_and_does_not_include_mempool_or_relay_bid_data
