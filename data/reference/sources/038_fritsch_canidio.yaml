@@ -1,0 +1,7 @@
+source_id: 038
+name: Measuring Arbitrage Losses and Profitability of AMM Liquidity
+type: empirical_AMM_arbitrage_research
+url: https://arxiv.org/abs/2404.05803
+role: arbitrage_loss_LVR_and_block_time_context
+grandmother_modules: [GM02, GM03, GM06]
+use: AMM_adverse_selection_and_block_time_sensitivity
