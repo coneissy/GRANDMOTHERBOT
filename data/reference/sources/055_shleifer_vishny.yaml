@@ -1,0 +1,9 @@
+source_id: 055
+name: The Limits of Arbitrage
+type: financial_economics_theory
+url: https://doi.org/10.1111/j.1540-6261.1997.tb03807.x
+authors: [Andrei Shleifer, Robert W. Vishny]
+year: 1997
+role: capital_constraints_and_arbitrage_risk_context
+grandmother_modules: [GM03, GM06]
+use: interpret_inventory_capital_and_execution_risk
