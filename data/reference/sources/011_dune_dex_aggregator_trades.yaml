@@ -1,0 +1,9 @@
+source_id: 011
+name: Dune dex_aggregator.trades
+type: curated_dex_data
+url: https://docs.dune.com/data-catalog/evm/ethereum/curated-data/dex/dex-aggregator-trades
+role: high_level_user_intent_trade_reconstruction
+key_semantics: one_row_can_condense_multiple_dex_hops_into_user_level_trade
+grandmother_modules: [GM01, GM06]
+use: compare_intended_trade_with_granular_dex_trades
+do_not_replace: dex.trades_for_execution_path_and_pool_level_reconstruction
