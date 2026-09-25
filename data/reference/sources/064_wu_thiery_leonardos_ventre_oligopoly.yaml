@@ -1,0 +1,7 @@
+source_id: 064
+name: From Competition to Centralization: The Oligopoly in Ethereum Block Building Auctions
+type: empirical_game_theoretic_PBS_research
+url: https://arxiv.org/abs/2412.18074
+role: builder_strategic_bidding_and_oligopoly
+grandmother_modules: [GM04, GM05, GM06]
+use: latency_ME​V_access_and_builder_concentration_models
