@@ -38,3 +38,5 @@ sources:
   ultra_sound: "https://github.com/ultrasoundmoney/docs/blob/main/bid_adjustment.md"
   layerzero: "data/reference/layerzero_send_original.sql"
   rig_builder_auction: "https://rig.ethereum.org/paper/to-compete-or-collude-bidding-incentives-in-ethereum-block-building-auctions"
+  google_scholar: "https://scholar.google.com/scholar_lookup?arxiv_id=2507.13023"
+  conference_version: "https://doi.org/10.4230/LIPIcs.AFT.2025.26"
