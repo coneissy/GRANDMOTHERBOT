@@ -1,0 +1,9 @@
+source_id: 012
+name: Dune dex.trades Ethereum
+type: curated_dex_data
+url: https://docs.dune.com/data-catalog/evm/ethereum/curated-data/dex/dex-trades
+role: primary_granular_D​EX_trade_data
+key_semantics: records_trade_segments_and_liquidity_pool_execution_steps
+grandmother_modules: [GM01, GM02, GM03, GM06]
+use: candidate_detection_swap_chain_reconstruction_volume_liquidity_and_pair_mapping
+critical_invariant: preserve_transaction_hash_log_index_pool_token_addresses_and_amounts_when_available
