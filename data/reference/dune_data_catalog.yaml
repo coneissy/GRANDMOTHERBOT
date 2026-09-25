@@ -15,3 +15,34 @@ sources:
       transaction initiator for each successful Arbitrum send.
     research_scope: cross_chain_activity_fingerprint
     interpretation: descriptive_activity_only
+
+  - name: Dune Analytics
+    category: blockchain_analytics
+    url: https://dune.com/home
+    role:
+      - primary_ethereum_detection
+      - dex_trade_data
+      - decoded_and_curated_blockchain_data
+  - name: Etherscan
+    category: token_metadata_and_address_cross_check
+    url: https://etherscan.io/
+    role:
+      - binance_listed_token_contract_cross_check
+      - address_metadata_cross_check
+    paper_role: heuristic_6_token_verification
+  - name: CoinMarketCap
+    category: token_metadata_and_market_listing_cross_check
+    url: https://coinmarketcap.com/
+    role:
+      - binance_listed_token_cross_check
+      - token_metadata_cross_check
+    paper_role: heuristic_6_token_verification
+  - name: Arkham
+    category: entity_attribution
+    url: https://arkm.com/
+    intel_url: https://intel.arkm.com/
+    role:
+      - secondary_entity_attribution
+      - wallet_and_exchange_cross_check
+      - address_cluster_context
+    paper_role: GrandMother_extension
