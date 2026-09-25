@@ -569,7 +569,7 @@ class TardisHTTPClient:
     ) -> Any:
         """Download Tardis normalized CSV datasets using tardis-dev."""
         try:
-            from tardis_dev import datasets
+            from tardis_dev import download_datasets
         except ImportError as exc:
             raise RuntimeError(
                 "Install the optional Tardis extra with `pip install -e .[tardis]`."
@@ -580,7 +580,7 @@ class TardisHTTPClient:
         if not data_types:
             raise ValueError("at least one dataset type is required")
 
-        return datasets.download(
+        return download_datasets(
             exchange="binance",
             data_types=list(data_types),
             from_date=from_date,
