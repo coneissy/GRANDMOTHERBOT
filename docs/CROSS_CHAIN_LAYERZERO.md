@@ -40,3 +40,28 @@ https://dune.com/data/arbitrum.transactions
 
 Arbitrum transactions documentation:
 https://docs.dune.com/data-catalog/evm/arbitrum/raw/transactions
+
+## Supplied sender-activity snapshot
+
+GrandMother also preserves the user-supplied aggregate LayerZero sender snapshot at:
+
+data/reference/layerzero_sender_activity_snapshot.csv
+
+Snapshot fields:
+
+sender, user_tx_count
+
+Snapshot size: 25 senders.
+Aggregate successful-send count across those rows: 1,755.
+Mean successful sends per sender: 70.2.
+Median: 56.
+Minimum: 5.
+Maximum: 218.
+
+These are descriptive counts from the supplied snapshot. They are not profitability,
+arbitrage, or causal scores, and they must not be interpreted as such.
+
+The snapshot should be joined to the canonical cross-chain event/profile layer by
+lowercased sender address. When a time-aware analysis is required, regenerate
+features directly from timestamped LayerZero events rather than treating this
+aggregate snapshot as historically contemporaneous.
