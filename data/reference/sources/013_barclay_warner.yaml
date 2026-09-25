@@ -1,0 +1,13 @@
+source_id: 013
+name: Stealth Trading and Volatility: Which Trades Move Prices?
+type: market_microstructure_literature
+authors: [Michael J. Barclay, Jerold B. Warner]
+venue: Journal of Financial Economics
+year: 1993
+volume: 34
+issue: 3
+pages: 281-305
+doi: 10.1016/0304-405X(93)90029-B
+role: trade_size_and_price_impact_context
+grandmother_modules: [GM02, GM06]
+use: motivate_size_conditioned_execution_and_price_impact_sensitivity
