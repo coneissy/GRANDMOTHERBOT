@@ -15,6 +15,8 @@ paper:
   ultra_sound_refund_change_utc: "2024-03-05T05:00:00Z"
   ultra_sound_refund_before: 1.0
   ultra_sound_refund_after: 0.5
+  layerzero_activity_source: "user_supplied_dune_query"
+  layerzero_time_aware_features: true
 
 major_tokens:
   - WETH
@@ -34,3 +36,5 @@ sources:
   tardis: "https://docs.tardis.dev/historical-data-details/binance"
   relayscan: "https://www.relayscan.io/builder-profit"
   ultra_sound: "https://github.com/ultrasoundmoney/docs/blob/main/bid_adjustment.md"
+  layerzero: "data/reference/layerzero_send_original.sql"
+  rig_builder_auction: "https://rig.ethereum.org/paper/to-compete-or-collude-bidding-incentives-in-ethereum-block-building-auctions"
