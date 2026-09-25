@@ -1,0 +1,7 @@
+source_id: 053
+name: Quantifying Blockchain Extractable Value: How Dark is the Forest?
+type: foundational_empirical_MEV_research
+url: https://arxiv.org/abs/2101.05511
+role: historical_MEV_measurement_framework
+grandmother_modules: [GM01, GM03, GM04]
+use: historical_MEV_taxonomy_and_baseline_comparison
