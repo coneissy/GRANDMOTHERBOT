@@ -1,0 +1,7 @@
+source_id: 036
+name: Ethereum Proof-of-Stake
+type: protocol_reference
+url: https://ethereum.org/developers/docs/consensus-mechanisms/pos/
+role: proposer_validator_consensus_context
+grandmother_modules: [GM04, GM05, GM07]
+use: block_time_slot_proposer_and_validator_context
