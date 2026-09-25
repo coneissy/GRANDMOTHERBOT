@@ -1,0 +1,14 @@
+source_id: 026
+name: Does a Central Clearing Counterparty Reduce Counterparty Risk?
+type: financial_market_structure_theory
+authors: [Darrell Duffie, Haoxiang Zhu]
+year: 2011
+venue: The Review of Asset Pricing Studies
+volume: 1
+issue: 1
+pages: 74-95
+doi: 10.1093/rapstu/rar001
+role: clearing_netting_and_counterparty_exposure_context
+grandmother_modules: [GM03, GM06]
+use: conceptual_context_for_capital_and_counterparty_risk_when_comparing_offchain_hedge_venues
+not_primary_mev_source: true
