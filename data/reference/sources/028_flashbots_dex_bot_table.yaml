@@ -1,0 +1,8 @@
+source_id: 028
+name: Flashbots DEX trading bot table
+type: Dune_saved_query
+url: https://dune.com/queries/3375587
+role: trading_bot_label_support
+grandmother_modules: [GM01, GM03, GM06]
+use: identify_or_crosscheck_labeled_trading_bot_addresses
+provenance_requirement: preserve_query_id_execution_id_and_query_version_when_exported
