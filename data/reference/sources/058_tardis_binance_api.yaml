@@ -1,0 +1,7 @@
+source_id: 058
+name: Available Token Price Data on Binance
+type: Tardis_exchange_metadata_API
+url: https://api.tardis.dev/v1/exchanges/binance
+role: Binance_instrument_and_data_availability_metadata
+grandmother_modules: [GM02, GM07]
+use: verify_symbol_coverage_and_dataset_availability_before_historical_extraction
