@@ -1,0 +1,11 @@
+source_id: 007
+name: EIP-7782 Reduce Block Latency
+type: ethereum_protocol_proposal
+url: https://eips.ethereum.org/EIPS/eip-7782
+authors: [Ben Adams, Dankrad Feist, Maria Ines Silva, Paul Harris]
+status_at_2026_09_25: draft_standards_track_core
+proposal: reduce_slot_time_from_12s_to_6s
+grandmother_role: protocol_timing_context_and_forward_robustness
+relevance: timing_assumptions_affect_CEX_D​EX_markouts_builder_bid_profiles_and_LVR
+modules: [GM02, GM04, GM06]
+historical_replication_rule: do_not_apply_proposed_future_timing_to_the_paper_period
