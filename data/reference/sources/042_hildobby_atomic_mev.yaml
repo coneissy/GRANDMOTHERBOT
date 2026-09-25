@@ -1,0 +1,7 @@
+source_id: 042
+name: Atomic MEV table
+type: Dune_saved_query
+url: https://dune.com/queries/3493305
+role: atomic_MEV_identification_support
+grandmother_modules: [GM01, GM06]
+use: exclusion_filter_and_atomic_MEV_cross_check
