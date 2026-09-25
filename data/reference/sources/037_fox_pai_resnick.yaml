@@ -1,0 +1,7 @@
+source_id: 037
+name: Censorship Resistance in On-Chain Auctions
+type: academic_auction_and_protocol_research
+url: https://arxiv.org/abs/2301.13321
+role: timed_inclusion_and_censorship_cost_model
+grandmother_modules: [GM04, GM05, GM06]
+use: auction_duration_inclusion_and_timing_robustness
