@@ -1,0 +1,7 @@
+source_id: 061
+name: Blockchain Censorship
+type: empirical_blockchain_censorship_research
+url: https://doi.org/10.1145/3589334.3645431
+role: censorship_and_transaction_inclusion_context
+grandmother_modules: [GM04, GM05, GM06]
+use: builder_concentration_and_inclusion_risk_context
