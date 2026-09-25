@@ -1,0 +1,9 @@
+source_id: 034
+name: Flashbots MEV-Share
+type: orderflow_auction_protocol
+url: https://docs.flashbots.net/flashbots-protect/mev-share
+github: https://github.com/flashbots/mev-share
+role: selective_private_orderflow_and_backrun_auction_model
+grandmother_modules: [GM01, GM04, GM05, GM06]
+use: private_orderflow_and_OFA_mechanism_context
+current_protocol_note: MEV-Share is an open-source protocol for users wallets and apps to selectively share transaction data with searchers who bid in bundles
