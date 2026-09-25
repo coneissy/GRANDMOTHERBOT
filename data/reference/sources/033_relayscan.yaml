@@ -1,0 +1,8 @@
+source_id: 033
+name: MEV-Boost Analytics - RelayScan
+type: builder_relay_analytics
+url: https://www.relayscan.io/builder-profit?t=7d
+role: builder_profit_and_relay_bid_observation
+grandmother_modules: [GM04, GM05, GM06, GM07]
+use: builder_profitability_and_relay_cross_check
+critical_limitation: Relayscan states its block.coinbase_ETH_balance_difference method can be inaccurate when builders pay validators via other addresses or pay for orderflow offchain or use builder-wallet funds for searcher bid value
