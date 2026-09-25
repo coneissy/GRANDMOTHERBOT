@@ -1,0 +1,8 @@
+source_id: 035
+name: Uniswap X Fillers, USDC-WETH Volume Distribution by Trade Size
+type: Dune_saved_query
+url: https://dune.com/queries/4050099
+role: filler_execution_and_trade_size_context
+grandmother_modules: [GM02, GM03, GM06]
+use: compare_solver_or_filler_execution_size_and_CEX_hedge_cost_context
+provenance_requirement: preserve_query_id_execution_id_and_query_version
