@@ -1,0 +1,8 @@
+source_id: 027
+name: BuilderNet
+type: builder_infrastructure
+url: http://buildernet.org/docs
+role: builder_network_and_private_orderflow_infrastructure
+grandmother_modules: [GM04, GM05, GM06]
+use: builder_identity_orderflow_and_infrastructure_context
+current_site_checked: true
