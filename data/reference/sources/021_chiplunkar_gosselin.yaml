@@ -1,0 +1,8 @@
+source_id: 021
+name: A New Game in Town
+type: MEV_strategy_research_article
+url: https://frontier.tech/a-new-game-in-town
+authors: [Ankit Chiplunkar, Stephane Gosselin]
+role: ordering_E​V_vs_signal_E​V_and_informed_searcher_taxonomy
+grandmother_modules: [GM01, GM03, GM04, GM06]
+use: distinguish_onchain_ordering_value_from_external_signal_value
