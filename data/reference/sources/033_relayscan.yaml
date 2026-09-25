@@ -16,9 +16,11 @@ snapshot:
   displayed_blocks_total: 6562
   displayed_profit_blocks_total: 6500
   displayed_subsidy_blocks_total: 59
-  displayed_profit_total_eth: 141.1391
-  displayed_subsidies_total_eth: 0.1709
+  displayed_profit_total_source_units: 141.1391
+  displayed_subsidies_total_source_units: 0.1709
 interpretation:
   - snapshot_is_point_in_time_not_paper_period_aggregate
   - displayed_rows_are_not_the_complete_builder_market_unless_the_source_confirms_full_coverage
   - profit_and_subsidy_values_should_be_reconciled_to_underlying_bid_and_coinbase_data_before_causal_interpretation
+
+unit_policy: The user-supplied table did not state the unit, so GrandMother does not infer ETH from the pasted values.
