@@ -1,0 +1,80 @@
+source_id: 004
+name: Etherscan
+type: blockchain_explorer_and_onchain_api
+reference_url: https://etherscan.io/
+api_url: https://etherscan.io/api
+current_api_scope: 60_plus_EVM_chains
+paper_reference_role: heuristic_6_token_verification
+grandmother_role: token_contract_verification_and_secondary_onchain_cross_check
+paper_use:
+  - cross_verify_binance_listed_erc20_contract_addresses
+  - help exclude same_symbol_nonlisted_tokens
+  - verify token identity before Dune dex_trades matching
+paper_target_universe: 287 Binance-listed ERC20 tokens
+current_research_endpoints:
+  account:
+    - txlist
+    - txlistinternal
+    - tokentx
+    - tokenbalance
+    - tokenbalancehistory
+  contract:
+    - getabi
+    - getsourcecode
+  logs:
+    - getlogs
+  token:
+    - tokeninfo
+  transaction:
+    - gettxreceiptstatus
+    - getstatus
+  block:
+    - getblockreward
+  name_tags:
+    - address labels and metadata
+current_capabilities_documented:
+  - transaction histories
+  - internal transactions
+  - ERC20 transfer events
+  - historical token balances
+  - contract source and ABI for verified contracts
+  - token information
+  - logs
+  - address labels
+  - multichain access through a common API
+grandmother_use:
+  GM01:
+    - token_contract_cross_check
+    - transaction_and_log_validation
+  GM03:
+    - optional address_activity_cross_check
+  GM04:
+    - optional builder_and_searcher_address_cross_check
+  GM06:
+    - attribution_disagreement_control
+  GM07:
+    - source_provenance_record
+identifier_policy:
+  - use_chain_and_contract_address_as_canonical_token_identity
+  - never_use_symbol_alone
+  - retain_case_normalized_address
+  - retain_source_url
+  - retain_retrieval_timestamp
+historical_data_policy:
+  - current_API_capabilities_are_not_assumed_to_exist_in_the_same_form_during_the_paper_period
+  - paper_replication_uses_only_sources_and_fields_supported_by_the_original_methodology
+  - later_API_data_is_a_versioned_extension_or_cross_check
+rate_and_access_policy:
+  - API_credentials_environment_only
+  - respect_published_API_limits_and_terms
+evidence_policy:
+  primary_empirical_source: Dune
+  token_identity_cross_check: Etherscan_plus_CoinMarketCap
+  secondary_entity_attribution: Arkham
+  market_history: Tardis
+research_warning: explorer labels, verified source status, and current metadata are evidence fields, not automatic ground truth for historical actor identity.
+provenance_sources:
+  - https://etherscan.io/
+  - https://etherscan.io/api
+  - https://docs.etherscan.io/
+  - https://info.arxiv.org/about/accessibility_html_error_messages.html
