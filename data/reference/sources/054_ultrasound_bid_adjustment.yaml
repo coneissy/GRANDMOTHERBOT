@@ -1,0 +1,7 @@
+source_id: 054
+name: Ultra Sound Relay Bid Adjustment
+type: builder_relay_bid_adjustment
+url: https://github.com/ultrasoundmoney/docs/blob/main/bid_adjustment.md
+role: builder_bid_adjustment_and_refund_mechanism
+grandmother_modules: [GM04, GM06, GM07]
+use: builder_profit_correction_and_refund_regime_split
