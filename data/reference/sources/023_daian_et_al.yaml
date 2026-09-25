@@ -1,0 +1,9 @@
+source_id: 023
+name: Flash Boys 2.0: Frontrunning, Transaction Reordering, and Consensus Instability in Decentralized Exchanges
+type: foundational_MEV_research
+url: https://arxiv.org/abs/1904.05234
+authors: [Philip Daian, Steven Goldfeder, Tyler Kell, Yunqi Li, Xueyuan Zhao, Iddo Bentov, Lorenz Breidenbach, Ari Juels]
+year: 2019
+role: foundational_MEV_and_priority_gas_auction_framework
+grandmother_modules: [GM01, GM03, GM04]
+use: MEV_taxonomy_transaction_ordering_and_auction_background
