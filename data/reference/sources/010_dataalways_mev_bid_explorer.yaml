@@ -1,0 +1,9 @@
+source_id: 010
+name: MEV Bid Data Explorer
+type: builder_bid_data_dashboard
+url: https://dune.com/data_always/mev-bid-data-explorer?block_number_t72e94=22196045
+role: builder_bid_and_auction_data_discovery
+grandmother_modules: [GM04, GM05, GM06]
+use: locate_block_builder_bid_metrics_and_cross_check_relay_data
+provenance: preserve_dashboard_url_parameters_and_retrieval_timestamp
+limitation: dashboard_UI_is_not_a_substitute_for_exported_Dune_query_or_raw_bid_dataset
