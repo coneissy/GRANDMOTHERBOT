@@ -32,6 +32,20 @@ def main():
     sub.add_parser("tardis-key-info")
     sub.add_parser("tardis-binance")
 
+    datasets_cmd = sub.add_parser(
+        "tardis-download",
+        help="Download normalized Binance Tardis datasets over a date range.",
+    )
+    datasets_cmd.add_argument("--from-date", required=True)
+    datasets_cmd.add_argument("--to-date", required=True)
+    datasets_cmd.add_argument("--symbols", nargs="+", required=True)
+    datasets_cmd.add_argument(
+        "--data-types",
+        nargs="+",
+        default=["trades", "book_ticker", "book_snapshot_25"],
+    )
+    datasets_cmd.add_argument("--download-dir", default="data/tardis/datasets")
+
     fetch = sub.add_parser(
         "tardis-fetch",
         help="Fetch a UTC window of Binance raw Tardis data.",
@@ -86,6 +100,17 @@ def main():
 
     if ns.cmd == "tardis-binance":
         print(json.dumps(client.get_exchange_details("binance"), indent=2, sort_keys=True))
+        return
+
+    if ns.cmd == "tardis-download":
+        result = client.download_datasets(
+            from_date=ns.from_date,
+            to_date=ns.to_date,
+            symbols=ns.symbols,
+            data_types=ns.data_types,
+            download_dir=ns.download_dir,
+        )
+        print(json.dumps({"result": result}, default=str, indent=2))
         return
 
     if ns.cmd == "tardis-fetch":
