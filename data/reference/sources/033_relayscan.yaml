@@ -6,3 +6,19 @@ role: builder_profit_and_relay_bid_observation
 grandmother_modules: [GM04, GM05, GM06, GM07]
 use: builder_profitability_and_relay_cross_check
 critical_limitation: Relayscan states its block.coinbase_ETH_balance_difference method can be inaccurate when builders pay validators via other addresses or pay for orderflow offchain or use builder-wallet funds for searcher bid value
+
+historical_snapshot_artifacts:
+  - data/reference/snapshots/relayscan_builder_profit_2026-09-25T094947Z.csv
+snapshot:
+  captured_at_utc: 2026-09-25T09:49:47Z
+  window: 24h
+  displayed_builder_count: 10
+  displayed_blocks_total: 6562
+  displayed_profit_blocks_total: 6500
+  displayed_subsidy_blocks_total: 59
+  displayed_profit_total_eth: 141.1391
+  displayed_subsidies_total_eth: 0.1709
+interpretation:
+  - snapshot_is_point_in_time_not_paper_period_aggregate
+  - displayed_rows_are_not_the_complete_builder_market_unless_the_source_confirms_full_coverage
+  - profit_and_subsidy_values_should_be_reconciled_to_underlying_bid_and_coinbase_data_before_causal_interpretation
