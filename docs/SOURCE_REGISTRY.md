@@ -52,7 +52,7 @@ Reference status:
 | ID | Source | Status |
 | --- | --- | --- |
 | 001 | Arkham | fetched and normalized |
-| 002 | CoinMarketCap | pending |
+| 002 | CoinMarketCap | fetched and normalized |
 | 003 | Dune Analytics | pending |
 | 004 | Etherscan | pending |
 | 005-071 | Remaining references | pending |
