@@ -1,0 +1,13 @@
+source_id: 014
+name: Optimal control of execution costs
+type: execution_microstructure_literature
+authors: [Dimitris Bertsimas, Andrew W. Lo]
+venue: Journal of Financial Markets
+year: 1998
+volume: 1
+issue: 1
+pages: 1-50
+doi: 10.1016/S1386-4181(97)00012-8
+role: dynamic_execution_cost_model
+grandmother_modules: [GM02, GM03, GM06]
+use: horizon_and_market_impact_sensitivity
