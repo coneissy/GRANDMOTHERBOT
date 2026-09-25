@@ -1,0 +1,11 @@
+source_id: 008
+name: Optimal execution of portfolio transactions
+type: execution_microstructure_literature
+authors: [Robert Almgren, Neil Chriss]
+venue: Journal of Risk
+year: 2000
+doi: 10.21314/JOR.2001.041
+role: execution_cost_and_risk_model
+grandmother_modules: [GM02, GM03, GM06]
+use: motivate_market_impact_volatility_risk_and_execution_horizon_sensitivity
+implementation_note: GrandMother_uses_this_as_theoretical_reference_not_as_a_direct_price_model_unless_explicitly_specified
