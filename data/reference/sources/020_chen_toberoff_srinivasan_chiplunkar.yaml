@@ -1,0 +1,8 @@
+source_id: 020
+name: A Tale of Two Arbitrages
+type: empirical_and_theoretical_arbitrage_research
+url: https://frontier.tech/a-tale-of-two-arbitrages
+authors: [Eugene Chen, Alex Toberoff, Suraj Srinivasan, Ankit Chiplunkar]
+role: atomic_vs_cefi_defi_arbitrage_comparison
+grandmother_modules: [GM01, GM02, GM03, GM04, GM06]
+use: strategy_taxonomy_and_risk_comparison
