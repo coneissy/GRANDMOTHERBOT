@@ -1,0 +1,60 @@
+source_id: 002
+name: CoinMarketCap
+type: crypto_market_data_and_metadata
+paper_reference_role: baseline_token_verification
+grandmother_role: token_identity_and_listing_cross_check
+url: https://coinmarketcap.com/
+api_url: https://pro-api.coinmarketcap.com
+api_docs: https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency
+current_catalog_checked: 2026-09-25
+key_research_endpoints:
+  metadata: /v2/cryptocurrency/info
+  id_map: /v1/cryptocurrency/map
+  listings_latest: /v3/cryptocurrency/listings/latest
+  listings_historical: /v1/cryptocurrency/listings/historical
+  quotes_latest: /v3/cryptocurrency/quotes/latest
+  quotes_historical: /v3/cryptocurrency/quotes/historical
+  ohlcv_historical: /v2/cryptocurrency/ohlcv/historical
+  market_pairs_latest: /v2/cryptocurrency/market-pairs/latest
+key_metadata:
+  - coinmarketcap_id
+  - symbol
+  - slug
+  - contract_addresses
+  - official_website
+  - description
+  - technical_documentation
+identifier_policy:
+  preferred: coinmarketcap_id
+  symbol_warning: symbols_are_not_unique
+  rationale: CoinMarketCap documents that symbol lookups can return multiple assets and recommends IDs for unambiguous identification.
+paper_use:
+  - verify_binance_listed_token_universe
+  - cross_check_erc20_contract_addresses
+  - resolve_token_identity
+grandmother_use:
+  - canonical_token_registry
+  - Binance_symbol_mapping_support
+  - historical_listing_robustness
+  - metadata_provenance
+not_primary_for:
+  - Ethereum_transaction_detection
+  - DEX_trade_execution_reconstruction
+  - historical_CEX_BBO_markouts
+evidence_policy:
+  - never_map_by_symbol_alone
+  - preserve_coinmarketcap_id
+  - preserve_contract_chain_and_address
+  - preserve_retrieval_timestamp
+  - distinguish_current_metadata_from_historical_listing_state
+credential_policy: API keys remain environment-only
+source_notes:
+  - CoinMarketCap documents that /v2/cryptocurrency/info returns static metadata including contract addresses.
+  - The metadata endpoint supports keyless public access, subject to the published public API limits.
+  - Historical listings and historical quote/OHLCV endpoints exist for time-aware robustness work.
+provenance_sources:
+  - https://coinmarketcap.com/
+  - https://coinmarketcap.com/api/
+  - https://coinmarketcap.com/api/documentation/pro-api-reference/cryptocurrency
+  - https://coinmarketcap.com/api/resources/how-to-retrieve-coin-metadata-logo-description-socials/
+  - https://coinmarketcap.com/api/documentation/guides/standards-and-conventions
