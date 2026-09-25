@@ -1,0 +1,7 @@
+source_id: 039
+name: The Centralizing Effects of Private Order Flow on Proposer-Builder Separation
+type: private_orderflow_PBS_research
+url: https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.AFT.2023.20
+role: private_orderflow_and_builder_centralization
+grandmother_modules: [GM04, GM05, GM06]
+use: exclusive_flow_and_builder_concentration_controls
