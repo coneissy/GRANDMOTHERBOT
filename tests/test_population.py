@@ -10,12 +10,12 @@ from grandmotherbot_paper.population import (
 
 def test_candidate_population_reconciles_to_target():
     result = reconcile_candidate_population(
-        total_input=10,
+        total_input=CANDIDATE_POPULATION_TARGET + 3,
         candidate_count=CANDIDATE_POPULATION_TARGET,
         target_count=CANDIDATE_POPULATION_TARGET,
     )
     assert result.matches_target
-    assert result.excluded_count == 10 - CANDIDATE_POPULATION_TARGET
+    assert result.excluded_count == 3
     assert result.delta_to_target == 0
 
 
