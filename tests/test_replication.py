@@ -19,6 +19,7 @@ from grandmotherbot_paper.liquidity import pair_class
 from grandmotherbot_paper.markout import (
     MarkoutPoint,
     TradeObservation,
+    complete_markout_window,
     inventory_adjustment_like_observation,
     optimal_horizon,
 )
@@ -71,6 +72,8 @@ def test_t_star_largest_tied_horizon():
     )
     obs = TradeObservation(Decimal("1"), Decimal("99"), Decimal("100"), Decimal("0"), points)
     assert optimal_horizon([obs]) == Decimal("10.0")
+    duplicate = TradeObservation(Decimal("1"), Decimal("99"), Decimal("100"), Decimal("0"), points + (points[0],))
+    assert not complete_markout_window(duplicate)
 
 
 def test_inventory_adjustment_is_excluded_from_markout_observation():
@@ -97,6 +100,7 @@ def test_profitability_and_margin_rules():
     assert profit_margin(ev, pnl) == Decimal("0.875")
     assert profit_margin(Decimal("-1"), Decimal("-11")) is None
     assert inventory_adjustment_like([Decimal("0"), Decimal("0.9")], Decimal("1"))
+    assert inventory_adjustment_like([Decimal("1")], Decimal("1"))
 
 
 def test_builder_profit_with_ultra_sound():
@@ -129,3 +133,22 @@ def test_liquidity_groups():
 def test_published_pattern_metadata():
     assert KNOWN_PATTERN_BY_SEARCHER["Bard"] == (None, 3)
     assert KNOWN_PATTERN_BY_SEARCHER["Wintermute"] == (Decimal("1.5"), 1)
+
+
+def test_profitability_uses_selected_searcher_horizon():
+    from grandmotherbot_paper.pipeline import profitable_trade_statistics
+
+    points = tuple(
+        MarkoutPoint(
+            h,
+            Decimal("101") if h == Decimal("1.0") else Decimal("100"),
+            Decimal("1"),
+        )
+        for h in HORIZONS
+    )
+    obs = TradeObservation(
+        Decimal("1"), Decimal("99"), Decimal("100"), Decimal("0"), points, Decimal("1")
+    )
+    result = profitable_trade_statistics(obs, Decimal("1.0"), Decimal("0"))
+    assert result["ev_usd"] == Decimal("2")
+    assert result["pnl_usd"] == Decimal("2")
