@@ -327,3 +327,30 @@ def validate_paper_block_range(df: pd.DataFrame) -> None:
             f"block range {lo}-{hi} falls outside paper range "
             f"{PAPER_START_BLOCK}-{PAPER_END_BLOCK}"
         )
+
+
+# Dynamic Tardis path: this is the paper-aligned entry point from raw
+# candidate transactions/swaps/token universe to the 23-point markout table.
+def build_paper_markouts(
+    transactions: pd.DataFrame,
+    swaps: pd.DataFrame,
+    binance_tokens,
+    config,
+    *,
+    apply_h1_h6: bool = True,
+) -> pd.DataFrame:
+    """Build paper-aligned markouts without requiring a precomputed markouts.csv.
+
+    The dynamic path performs H1-H6 filtering, multi-swap reconstruction,
+    contract-level Binance mapping, and the complete Tardis [-1,+10] second
+    window.  Raw Tardis data remains an external/cacheable input.
+    """
+    from .dynamic_pipeline import build_dynamic_markouts, build_markout_inputs
+
+    trade_inputs = build_markout_inputs(
+        transactions,
+        swaps,
+        binance_tokens,
+        apply_h1_h6=apply_h1_h6,
+    )
+    return build_dynamic_markouts(trade_inputs, config)
