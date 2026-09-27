@@ -185,5 +185,9 @@ def build_dynamic_markouts(trade_inputs: pd.DataFrame, config: DynamicPipelineCo
                 "token_a_usdt_mid": str(point.token_a_usdt_mid),
                 "token_b_usdt_mid": str(point.token_b_usdt_mid),
                 "cex_taker_fees_usd": str(observation.cex_taker_fees_usd),
+                "token_a_quote_timestamp_us": point.token_a_quote_timestamp_us,
+                "token_b_quote_timestamp_us": point.token_b_quote_timestamp_us,
+                "token_a_staleness_us": point.token_a_staleness_us,
+                "token_b_staleness_us": point.token_b_staleness_us,
             })
     return pd.DataFrame(rows)
