@@ -76,9 +76,7 @@ def optimal_horizon(observations: list[TradeObservation]) -> Decimal | None:
     if set(curve) != set(HORIZONS):
         return None
     maximum = max(curve.values())
-    return max(
-        horizon for horizon, value in curve.items() if value == maximum
-    )
+    return max(horizon for horizon, value in curve.items() if value == maximum)
 
 
 def complete_markout_window(observation: TradeObservation) -> bool:
@@ -91,7 +89,7 @@ def complete_markout_window(observation: TradeObservation) -> bool:
 def inventory_adjustment_like_observation(
     observation: TradeObservation,
 ) -> bool:
-    """Section 4.1 exclusion: MR stays below base fees across the full window."""
+    """Section 4.1 exclusion: markout revenue does not exceed base fees across the full window."""
     if not complete_markout_window(observation):
         return False
     revenues = [
@@ -106,5 +104,5 @@ def inventory_adjustment_like_observation(
         if point.horizon_s == horizon
     ]
     return len(revenues) == len(HORIZONS) and all(
-        revenue < observation.base_fees_usd for revenue in revenues
+        revenue <= observation.base_fees_usd for revenue in revenues
     )
