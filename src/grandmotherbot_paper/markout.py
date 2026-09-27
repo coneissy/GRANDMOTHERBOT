@@ -60,12 +60,10 @@ def median_gr_curve(observations: list[TradeObservation]) -> dict[Decimal, Decim
     for horizon in HORIZONS:
         values = []
         for observation in observations:
-            point = next(
-                (p for p in observation.markouts if p.horizon_s == horizon),
-                None,
-            )
-            if point is not None:
-                values.append(gross_return(observation, point))
+            points = [p for p in observation.markouts if p.horizon_s == horizon]
+            if len(points) != 1:
+                continue
+            values.append(gross_return(observation, points[0]))
         if values:
             curve[horizon] = median(values)
     return curve
@@ -80,10 +78,8 @@ def optimal_horizon(observations: list[TradeObservation]) -> Decimal | None:
 
 
 def complete_markout_window(observation: TradeObservation) -> bool:
-    return all(
-        any(point.horizon_s == horizon for point in observation.markouts)
-        for horizon in HORIZONS
-    )
+    horizons = [point.horizon_s for point in observation.markouts]
+    return len(horizons) == len(HORIZONS) and set(horizons) == set(HORIZONS)
 
 
 def inventory_adjustment_like_observation(
@@ -99,10 +95,6 @@ def inventory_adjustment_like_observation(
             point,
             observation.cex_taker_fees_usd,
         )
-        for horizon in HORIZONS
         for point in observation.markouts
-        if point.horizon_s == horizon
     ]
-    return len(revenues) == len(HORIZONS) and all(
-        revenue <= observation.base_fees_usd for revenue in revenues
-    )
+    return all(revenue <= observation.base_fees_usd for revenue in revenues)
