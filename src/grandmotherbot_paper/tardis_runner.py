@@ -18,17 +18,11 @@ class MarkoutInput:
     base_fees_usd: Decimal = Decimal("0")
 
 
-def two_leg_cex_fee(
-    bought_amount: Decimal,
-    sold_amount: Decimal,
-    bought_mid: Decimal,
-    sold_mid: Decimal,
-    fee_rate: Decimal,
-) -> Decimal:
-    """Taker fee for selling the DEX-bought token and buying back the DEX-sold token."""
-    return fee_rate * (
-        bought_amount * bought_mid + sold_amount * sold_mid
-    )
+def two_leg_cex_fee(dex_volume_usd: Decimal, fee_rate: Decimal) -> Decimal:
+    """Two CEX taker legs, using the DEX trade USD notional for each leg."""
+    if dex_volume_usd <= 0:
+        raise ValueError("DEX volume must be positive")
+    return Decimal("2") * dex_volume_usd * fee_rate
 
 
 def build_markout_observation(
@@ -48,20 +42,13 @@ def build_markout_observation(
     bought_quotes = quotes_by_symbol.get(trade.bought_symbol, [])
     sold_quotes = quotes_by_symbol.get(trade.sold_symbol, [])
     points: list[MarkoutPoint] = []
-    fees_by_horizon: list[Decimal] = []
+    fee = two_leg_cex_fee(trade.dex_volume_usd, fee_rate)
 
     for horizon_s, target_us in zip(HORIZONS, markout_targets(trade.slot_time_us)):
         bought = quote_selector(bought_quotes, target_us, max_staleness_us)
         sold = quote_selector(sold_quotes, target_us, max_staleness_us)
         if bought is None or sold is None:
             continue
-        fee = two_leg_cex_fee(
-            trade.amount_bought,
-            trade.amount_sold,
-            bought.quote.mid_price,
-            sold.quote.mid_price,
-            fee_rate,
-        )
         points.append(
             MarkoutPoint(
                 horizon_s,
@@ -69,27 +56,12 @@ def build_markout_observation(
                 sold.quote.mid_price,
             )
         )
-        fees_by_horizon.append(fee)
 
-    if len(points) != len(HORIZONS):
-        return TradeObservation(
-            amount_a=trade.amount_bought,
-            amount_b=trade.amount_sold,
-            dex_volume_usd=trade.dex_volume_usd,
-            cex_taker_fees_usd=Decimal("0"),
-            markouts=tuple(points),
-            base_fees_usd=trade.base_fees_usd,
-        )
-
-    # The current TradeObservation API stores one fee value. For a complete
-    # window, retain the fee at the reference horizon as the canonical value.
-    # Per-horizon fee values remain derivable from the quote matrix itself.
-    reference_fee = fees_by_horizon[2]  # 0.0s horizon
     return TradeObservation(
         amount_a=trade.amount_bought,
         amount_b=trade.amount_sold,
         dex_volume_usd=trade.dex_volume_usd,
-        cex_taker_fees_usd=reference_fee,
+        cex_taker_fees_usd=fee,
         markouts=tuple(points),
         base_fees_usd=trade.base_fees_usd,
     )
