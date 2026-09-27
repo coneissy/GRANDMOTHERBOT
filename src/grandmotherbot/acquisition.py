@@ -30,31 +30,63 @@ def download_dune_query(
     *,
     limit: int = 100_000,
 ) -> Path:
-    """Download a Dune query result using the official API.
+    """Download the complete latest Dune result using bounded pagination.
 
-    The query itself is frozen by ID. Pagination/export strategy can be
-    extended without changing the paper specification.
+    Dune exposes ``limit`` and ``offset`` pagination on the latest-result
+    endpoint. We preserve the query result as one normalized envelope and fail
+    closed if the server returns an unexpected page shape.
     """
-    api_key = _require_env("DUNE_API_KEY")
-    url = f"https://api.dune.com/api/v2/query/{query_id}/results"
-    response = requests.get(
-        url,
-        headers={"X-Dune-API-Key": api_key, "Accept": "application/json"},
-        params={"limit": limit},
-        timeout=60,
-    )
-    response.raise_for_status()
-    payload: dict[str, Any] = response.json()
-    rows = payload.get("result", {}).get("rows")
-    if rows is None:
-        raise AcquisitionError("Dune response did not contain result.rows")
+    if limit <= 0:
+        raise ValueError("limit must be positive")
 
+    api_key = _require_env("DUNE_API_KEY")
+    url = f"https://api.dune.com/api/v1/query/{query_id}/results"
+    headers = {"X-DUNE-API-KEY": api_key, "Accept": "application/json"}
+
+    rows: list[dict[str, Any]] = []
+    offset = 0
+    first_payload: dict[str, Any] | None = None
+
+    while True:
+        response = requests.get(
+            url, headers=headers, params={"limit": limit, "offset": offset}, timeout=60
+        )
+        response.raise_for_status()
+        payload: dict[str, Any] = response.json()
+        result = payload.get("result")
+        page = result.get("rows") if isinstance(result, dict) else None
+        if not isinstance(page, list):
+            raise AcquisitionError(
+                f"Dune response did not contain a result.rows list at offset {offset}"
+            )
+        if first_payload is None:
+            first_payload = payload
+        rows.extend(page)
+        if len(page) < limit:
+            break
+        next_offset = payload.get("next_offset")
+        offset = int(next_offset) if next_offset is not None else offset + len(page)
+        if offset <= 0:
+            raise AcquisitionError("Dune pagination returned a non-progressing offset")
+
+    if first_payload is None:
+        raise AcquisitionError("Dune returned no result pages")
+    combined = dict(first_payload)
+    combined_result = dict(combined.get("result", {}))
+    combined_result["rows"] = rows
+    metadata = combined_result.get("metadata")
+    if isinstance(metadata, dict):
+        combined_metadata = dict(metadata)
+        combined_metadata["row_count"] = len(rows)
+        combined_metadata["total_row_count"] = len(rows)
+        combined_result["metadata"] = combined_metadata
+    combined["result"] = combined_result
+    combined["pagination"] = {
+        "page_size": limit, "pages": (len(rows) + limit - 1) // limit, "row_count": len(rows)
+    }
     destination = Path(output)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(
-        __import__("json").dumps(payload, separators=(",", ":")),
-        encoding="utf-8",
-    )
+    destination.write_text(__import__("json").dumps(combined, separators=(",", ":")), encoding="utf-8")
     return destination
 
 
