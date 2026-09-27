@@ -129,3 +129,54 @@ def test_liquidity_groups():
 def test_published_pattern_metadata():
     assert KNOWN_PATTERN_BY_SEARCHER["Bard"] == (None, 3)
     assert KNOWN_PATTERN_BY_SEARCHER["Wintermute"] == (Decimal("1.5"), 1)
+
+
+def test_top_level_reproduction_uses_dynamic_tardis_path(tmp_path):
+    from grandmotherbot_paper.cex_mapping import BinanceToken
+    from grandmotherbot_paper.dynamic_pipeline import DynamicPipelineConfig
+    from grandmotherbot_paper.reproduction import build_paper_markouts
+
+    day = tmp_path / "2024-01-01"
+    day.mkdir()
+    base = 1704067200000000
+    rows = []
+    for i in range(25):
+        ts = base - 1_000_000 + i * 500_000
+        for symbol, ask, bid in (("AAA", "101", "99"), ("BBB", "2", "1")):
+            rows.append({
+                "exchange": "binance", "symbol": symbol, "timestamp": ts,
+                "local_timestamp": ts, "ask_amount": "100", "ask_price": ask,
+                "bid_price": bid, "bid_amount": "100",
+            })
+    frame = pd.DataFrame(rows)
+    for symbol in ("AAA", "BBB"):
+        frame[frame.symbol == symbol].to_csv(
+            day / f"{symbol}.csv.gz", index=False, compression="gzip"
+        )
+
+    transactions = pd.DataFrame([{
+        "tx_hash": "0x1", "block_number": 1,
+        "slot_time": "2024-01-01T00:00:00Z", "searcher_label": "Test",
+        "volume_usd": "1000",
+        "observed_public_mempool": False, "first_swap_in_pool_direction": True,
+        "atomic_mev": False, "liquidation": False, "ofa_backrun": False,
+        "known_router": False, "labeled_trading_bot": False,
+        "ens_named_eoa_controller": False, "erc721_transfer": False,
+        "final_pair_major_cex_listed": True, "from_address": "0xabc",
+    }])
+    swaps = pd.DataFrame([{
+        "tx_hash": "0x1", "log_index": 0,
+        "token_in": "0x0000000000000000000000000000000000000001",
+        "token_out": "0x0000000000000000000000000000000000000002",
+        "amount_in": "10", "amount_out": "20",
+    }])
+    tokens = [
+        BinanceToken("AAA", "0x0000000000000000000000000000000000000001"),
+        BinanceToken("BBB", "0x0000000000000000000000000000000000000002"),
+    ]
+
+    out = build_paper_markouts(
+        transactions, swaps, tokens, DynamicPipelineConfig(tmp_path)
+    )
+    assert len(out) == 23
+    assert set(out.horizon_s) == {str(-1.0 + i * 0.5) for i in range(23)}
