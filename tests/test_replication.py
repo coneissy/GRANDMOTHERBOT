@@ -129,3 +129,88 @@ def test_liquidity_groups():
 def test_published_pattern_metadata():
     assert KNOWN_PATTERN_BY_SEARCHER["Bard"] == (None, 3)
     assert KNOWN_PATTERN_BY_SEARCHER["Wintermute"] == (Decimal("1.5"), 1)
+
+
+def test_top_level_reproduction_uses_dynamic_tardis_path(tmp_path):
+    from grandmotherbot_paper.cex_mapping import BinanceToken
+    from grandmotherbot_paper.dynamic_pipeline import DynamicPipelineConfig
+    from grandmotherbot_paper.reproduction import build_paper_markouts
+
+    day = tmp_path / "2024-01-01"
+    day.mkdir()
+    base = 1704067200000000
+    rows = []
+    for i in range(25):
+        ts = base - 1_000_000 + i * 500_000
+        for symbol, ask, bid in (("AAA", "101", "99"), ("BBB", "2", "1")):
+            rows.append({
+                "exchange": "binance", "symbol": symbol, "timestamp": ts,
+                "local_timestamp": ts, "ask_amount": "100", "ask_price": ask,
+                "bid_price": bid, "bid_amount": "100",
+            })
+    frame = pd.DataFrame(rows)
+    for symbol in ("AAA", "BBB"):
+        frame[frame.symbol == symbol].to_csv(
+            day / f"{symbol}.csv.gz", index=False, compression="gzip"
+        )
+
+    transactions = pd.DataFrame([{
+        "tx_hash": "0x1", "block_number": 1,
+        "slot_time": "2024-01-01T00:00:00Z", "searcher_label": "Test",
+        "volume_usd": "1000",
+        "observed_public_mempool": False, "first_swap_in_pool_direction": True,
+        "atomic_mev": False, "liquidation": False, "ofa_backrun": False,
+        "known_router": False, "labeled_trading_bot": False,
+        "ens_named_eoa_controller": False, "erc721_transfer": False,
+        "final_pair_major_cex_listed": True, "from_address": "0xabc",
+    }])
+    swaps = pd.DataFrame([{
+        "tx_hash": "0x1", "log_index": 0,
+        "token_in": "0x0000000000000000000000000000000000000001",
+        "token_out": "0x0000000000000000000000000000000000000002",
+        "amount_in": "10", "amount_out": "20",
+    }])
+    tokens = [
+        BinanceToken("AAA", "0x0000000000000000000000000000000000000001"),
+        BinanceToken("BBB", "0x0000000000000000000000000000000000000002"),
+    ]
+
+    out = build_paper_markouts(
+        transactions, swaps, tokens, DynamicPipelineConfig(tmp_path)
+    )
+    assert len(out) == 23
+    assert set(out.horizon_s) == {str(-1.0 + i * 0.5) for i in range(23)}
+
+
+def test_aligned_economics_keeps_negative_ev_for_pnl_but_null_margin():
+    from grandmotherbot_paper.aligned import score_aligned
+
+    markouts = pd.DataFrame([{
+        "tx_hash": "0x1", "searcher_label": "Test", "horizon_s": "1.0",
+        "amount_a": "1", "amount_b": "100", "token_a_usdt_mid": "100",
+        "token_b_usdt_mid": "1", "cex_taker_fees_usd": "1",
+        "dex_volume_usd": "100", "base_fees_usd": "10", "builder_tips_usd": "5",
+    }])
+    tstars = pd.DataFrame([{"searcher_label": "Test", "computed_t_star_s": Decimal("1.0")}])
+    out = score_aligned(markouts, tstars)
+    assert len(out) == 1
+    assert out.iloc[0].ev_usd == Decimal("-11")
+    assert out.iloc[0].pnl_usd == Decimal("-16")
+    assert pd.isna(out.iloc[0].profit_margin)
+
+
+def test_aligned_economics_uses_computed_tstar_not_published_tstar():
+    from grandmotherbot_paper.aligned import score_aligned
+
+    markouts = pd.DataFrame([
+        {
+            "tx_hash": "0x1", "searcher_label": "Wintermute", "horizon_s": h,
+            "amount_a": "1", "amount_b": "1", "token_a_usdt_mid": "110",
+            "token_b_usdt_mid": "100", "cex_taker_fees_usd": "1",
+            "dex_volume_usd": "100", "base_fees_usd": "1", "builder_tips_usd": "1",
+        }
+        for h in ("0.5", "1.5")
+    ])
+    tstars = pd.DataFrame([{"searcher_label": "Wintermute", "computed_t_star_s": Decimal("0.5")}])
+    out = score_aligned(markouts, tstars)
+    assert out.iloc[0].t_star_s == Decimal("0.5")

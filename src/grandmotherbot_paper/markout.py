@@ -9,6 +9,10 @@ class MarkoutPoint:
     horizon_s: Decimal
     token_a_usdt_mid: Decimal
     token_b_usdt_mid: Decimal
+    token_a_quote_timestamp_us: int | None = None
+    token_b_quote_timestamp_us: int | None = None
+    token_a_staleness_us: int | None = None
+    token_b_staleness_us: int | None = None
 
 
 @dataclass(frozen=True)
@@ -60,10 +64,7 @@ def median_gr_curve(observations: list[TradeObservation]) -> dict[Decimal, Decim
     for horizon in HORIZONS:
         values = []
         for observation in observations:
-            point = next(
-                (p for p in observation.markouts if p.horizon_s == horizon),
-                None,
-            )
+            point = next((p for p in observation.markouts if p.horizon_s == horizon), None)
             if point is not None:
                 values.append(gross_return(observation, point))
         if values:
@@ -76,31 +77,19 @@ def optimal_horizon(observations: list[TradeObservation]) -> Decimal | None:
     if set(curve) != set(HORIZONS):
         return None
     maximum = max(curve.values())
-    return max(
-        horizon for horizon, value in curve.items() if value == maximum
-    )
+    return max(horizon for horizon, value in curve.items() if value == maximum)
 
 
 def complete_markout_window(observation: TradeObservation) -> bool:
-    return all(
-        any(point.horizon_s == horizon for point in observation.markouts)
-        for horizon in HORIZONS
-    )
+    return all(any(point.horizon_s == horizon for point in observation.markouts) for horizon in HORIZONS)
 
 
-def inventory_adjustment_like_observation(
-    observation: TradeObservation,
-) -> bool:
+def inventory_adjustment_like_observation(observation: TradeObservation) -> bool:
     """Section 4.1 exclusion: MR stays below base fees across the full window."""
     if not complete_markout_window(observation):
         return False
     revenues = [
-        markout_revenue(
-            observation.amount_a,
-            observation.amount_b,
-            point,
-            observation.cex_taker_fees_usd,
-        )
+        markout_revenue(observation.amount_a, observation.amount_b, point, observation.cex_taker_fees_usd)
         for horizon in HORIZONS
         for point in observation.markouts
         if point.horizon_s == horizon

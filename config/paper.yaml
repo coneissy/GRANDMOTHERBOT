@@ -7,9 +7,16 @@ paper:
   cex: "Binance"
   quote_currency: "USDT"
   usdt_usd_assumption: 1.0
+  tardis_dataset: "quotes"
+  tardis_timestamp_field: "timestamp"
+  tardis_local_timestamp_fallback: true
+  tardis_quote_selection: "last_at_or_before_target"
+  markout_reference: "ethereum_slot_time"
   markout_start_s: -1.0
   markout_end_s: 10.0
   markout_step_s: 0.5
+  markout_points: 23
+  cex_taker_fee_rate: 0.0001725
   exclusive_threshold: 0.50
   ultra_sound_activation_block: 18719819
   ultra_sound_refund_change_utc: "2024-03-05T05:00:00Z"
@@ -32,5 +39,7 @@ sources:
   dune_atomic_mev: "https://dune.com/queries/3493305"
   dune_sandwiches: "https://dune.com/hildobby/sandwiches"
   tardis: "https://docs.tardis.dev/historical-data-details/binance"
+  tardis_dataset_base: "https://datasets.tardis.dev/v1/binance/quotes"
+  tardis_exchange_metadata: "https://api.tardis.dev/v1/exchanges/binance"
   relayscan: "https://www.relayscan.io/builder-profit"
   ultra_sound: "https://github.com/ultrasoundmoney/docs/blob/main/bid_adjustment.md"
