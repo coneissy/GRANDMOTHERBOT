@@ -54,6 +54,10 @@ def build_markout_observation(
                 horizon_s,
                 bought.quote.mid_price,
                 sold.quote.mid_price,
+                token_a_quote_timestamp_us=bought.quote.timestamp_us,
+                token_b_quote_timestamp_us=sold.quote.timestamp_us,
+                token_a_staleness_us=bought.staleness_us,
+                token_b_staleness_us=sold.staleness_us,
             )
         )
 
