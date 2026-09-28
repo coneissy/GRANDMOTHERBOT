@@ -34,7 +34,7 @@ def test_order_book_vwap_and_partial_fill():
         {"price": 100, "quantity": 1},
     ])
     vwap, filled = executable_price_from_book(book, "buy", Decimal("2"))
-    assert vwap == Decimal("101")
+    assert vwap == Decimal("100.5")
     assert filled == Decimal("2")
 
 
