@@ -2,7 +2,6 @@ from decimal import Decimal
 
 import pandas as pd
 
-from grandmotherbot_extension.dynamic_hedge import evaluate_dynamic_hedge
 from grandmotherbot_extension.hedge_alignment import align_quotes_to_swaps
 from grandmotherbot_extension.hedge_simulator import simulate_hedge
 from grandmotherbot_extension.normalization import normalize_book_ticker, normalize_swaps
@@ -32,7 +31,7 @@ def test_dex_to_cex_hedge_extension_end_to_end():
         "amount_out": "2",
     }])
     swaps["cex_symbol"] = "ETHUSDT"
-    swaps["event_time"] = "2025-01-01T00:00:01Z"
+    swaps["event_time"] = "2025-01-01T00:00:01.200Z"
 
     raw_events = [{
         "capture_time": "2025-01-01T00:00:01.100Z",
@@ -49,7 +48,7 @@ def test_dex_to_cex_hedge_extension_end_to_end():
     quotes = normalize_book_ticker(raw_events)
     aligned = align_quotes_to_swaps(swaps, quotes, max_age_ms=500)
     assert aligned.iloc[0]["symbol"] == "ETHUSDT"
-    assert aligned.iloc[0]["quote_stale"] is False
+    assert not bool(aligned.iloc[0]["quote_stale"])
 
     order_book = pd.DataFrame([
         {"price": Decimal("99.5"), "quantity": Decimal("10"), "side": "bid"},
@@ -70,4 +69,4 @@ def test_dex_to_cex_hedge_extension_end_to_end():
     assert result["execution_price"] == Decimal("99.5")
     assert result["cex_fee_usd"] == Decimal("0.2985")
     assert result["residual_inventory_qty"] == Decimal("0")
-    assert result["fully_filled"] is True
+    assert bool(result["fully_filled"])
