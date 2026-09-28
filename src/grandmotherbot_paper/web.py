@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from .io import load_inputs, validate_inputs
+from .source_contract import input_readiness, paper_contract
 
 
 def _status() -> dict:
@@ -22,6 +23,8 @@ def _status() -> dict:
         "required_inputs": present,
         "inputs_valid": not errors,
         "validation_errors": errors,
+        "paper_contract": paper_contract(),
+        "input_readiness": input_readiness(root),
     }
 
 
