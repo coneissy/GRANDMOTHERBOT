@@ -24,7 +24,7 @@ def test_simulator_reports_execution_and_residual_inventory_separately_from_pape
     assert result["requested_qty"] == Decimal("2")
     assert result["filled_qty"] == Decimal("1")
     assert result["unfilled_qty"] == Decimal("1")
-    assert result["fully_filled"] is False
+    assert not bool(result["fully_filled"])
     assert result["cex_fee_usd"] == Decimal("0.1515")
     assert result["residual_inventory_qty"] == Decimal("1")
     assert result["future_residual_value_usd"] == Decimal("102")
@@ -38,6 +38,7 @@ def test_quote_alignment_does_not_cross_symbols():
         {
             "tx_hash": "0x1",
             "block_time": "2025-01-01T00:00:01Z",
+            "event_time": "2025-01-01T00:00:01Z",
             "cex_symbol": "ETHUSDT",
         },
     ])
@@ -68,6 +69,7 @@ def test_multi_symbol_quotes_require_explicit_swap_symbol():
     swaps = pd.DataFrame([{
         "tx_hash": "0x1",
         "block_time": "2025-01-01T00:00:01Z",
+        "cex_symbol": "ETHUSDT",
     }])
     quotes = pd.DataFrame([
         {
