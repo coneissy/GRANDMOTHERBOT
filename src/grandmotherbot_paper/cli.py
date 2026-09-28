@@ -10,11 +10,35 @@ from .report import build_report
 def main():
     parser=argparse.ArgumentParser(prog="grandmother-paper")
     sub=parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("validate")
+    v=sub.add_parser("validate")
+    v.add_argument("--input",default="data/input")
+    sub.add_parser("serve")
     a=sub.add_parser("analyze")
     a.add_argument("--input",default="data/input")
     a.add_argument("--output",default="output")
     ns=parser.parse_args()
+    if ns.cmd=="serve":
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+        import os
+
+        class HealthHandler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                if self.path not in {"/", "/health"}:
+                    self.send_response(404)
+                    self.end_headers()
+                    return
+                body=b'{"status":"ok","service":"grandmother-research"}\n'
+                self.send_response(200)
+                self.send_header("Content-Type","application/json")
+                self.send_header("Content-Length",str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            def log_message(self, format, *args):
+                return
+
+        port=int(os.environ.get("PORT","10000"))
+        ThreadingHTTPServer(("0.0.0.0",port),HealthHandler).serve_forever()
+        return
     root=Path(ns.input)
     if ns.cmd=="validate":
         inputs=load_inputs(root)
