@@ -70,7 +70,7 @@ def acquire_dune_query(
         missing_timestamp_rows=0,
         schema_version="raw-dune-v1",
     )
-    write_manifest(manifest, destination.with_suffix(".manifest.json"))
+    write_manifest(destination.with_suffix(".manifest.json"), [manifest])
     return AcquisitionResult("dune", str(destination), len(rows), retrieved_at)
 
 
