@@ -126,7 +126,7 @@ def acquire_tardis_minutes(
             missing_timestamp_rows=sum(1 for e in events if not e.get("disconnect") and not e.get("capture_time")),
             schema_version="tardis-raw-envelope-v1",
         )
-        write_manifest(manifest, destination.with_suffix(".manifest.json"))
+        write_manifest(destination.with_suffix(".manifest.json"), [manifest])
         results.append(AcquisitionResult("tardis", str(destination), len(events), retrieved_at))
 
     return results
@@ -134,6 +134,6 @@ def acquire_tardis_minutes(
 
 def acquisition_summary(results: list[AcquisitionResult]) -> dict[str, Any]:
     return {
-        "results": [asdict(result) for result in results],
+        "results": [asdict(result) if is_dataclass(result) else {"source": result.source, "output": result.output, "rows_received": result.rows_received, "retrieved_at": result.retrieved_at} for result in results],
         "total_rows_received": sum(result.rows_received for result in results),
     }
