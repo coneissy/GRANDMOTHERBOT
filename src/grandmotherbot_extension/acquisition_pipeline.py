@@ -8,7 +8,7 @@ manifest. It never fabricates or overwrites data/input/*.csv.
 """
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
