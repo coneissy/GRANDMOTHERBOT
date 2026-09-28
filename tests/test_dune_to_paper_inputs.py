@@ -10,7 +10,7 @@ def row(**overrides):
         "tx_hash": "0x1",
         "block_number": 18000000,
         "slot_time": "2024-01-01T00:00:00Z",
-        "from_address": "0x0000000000000000000000000000000000000002",
+        "from_address": "0x1111111111111111111111111111111111111111",
         "observed_public_mempool": True,
         "first_swap_in_pool_direction": True,
         "atomic_mev": False,
