@@ -62,7 +62,6 @@ def test_dex_to_cex_hedge_extension_end_to_end():
         taker_fee_bps=Decimal("15"),
         future_mid=Decimal("101"),
     )
-
     assert result["side"] == "sell"
     assert result["requested_qty"] == Decimal("2")
     assert result["filled_qty"] == Decimal("2")
