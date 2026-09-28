@@ -7,3 +7,4 @@ services:
     branch: main
     buildCommand: pip install -e .
     startCommand: python -m grandmotherbot_paper.web
+    healthCheckPath: /health
