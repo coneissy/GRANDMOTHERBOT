@@ -54,8 +54,10 @@ class DuneAdapter:
 
         api_key = _credential(self.config.api_key_env)
         client = DuneClient(api_key)
-        query = QueryBase(name="GrandMother CEX-DEX source query",
-                          query_id=self.config.query_id)
+        query = QueryBase(
+            name="GrandMother CEX-DEX source query",
+            query_id=self.config.query_id,
+        )
         if max_age_hours is not None:
             return client.get_latest_result(
                 self.config.query_id, max_age_hours=max_age_hours
@@ -63,10 +65,36 @@ class DuneAdapter:
         return client.run_query(query)
 
 
+def dune_rows(result: Any) -> list[dict[str, Any]]:
+    """Extract rows from common dune-client result shapes without coercion.
+
+    The source payload remains authoritative. Unknown columns and native values
+    are retained exactly as returned by the client.
+    """
+    payload = result
+    if hasattr(payload, "result"):
+        payload = payload.result
+
+    if isinstance(payload, dict):
+        rows = payload.get("rows")
+        if rows is None and isinstance(payload.get("result"), dict):
+            rows = payload["result"].get("rows")
+    else:
+        rows = getattr(payload, "rows", None)
+
+    if rows is None:
+        raise ValueError("Dune result does not contain a rows collection")
+    if not isinstance(rows, (list, tuple)):
+        raise TypeError("Dune rows collection must be a list or tuple")
+    return [dict(row) if isinstance(row, dict) else row for row in rows]
+
+
 class TardisAdapter:
     """Historical Binance Spot raw-feed adapter.
 
-    Raw exchange-native events are preserved. Normalization belongs downstream.
+    Tardis documents this endpoint as minute-by-minute NDJSON. Each non-empty
+    line contains a local/capture timestamp followed by the exchange-native
+    JSON message. Raw exchange-native messages are preserved.
     """
 
     BASE_URL = "https://api.tardis.dev/v1"
@@ -83,10 +111,13 @@ class TardisAdapter:
         symbols: tuple[str, ...] = (),
     ) -> list[dict[str, Any]]:
         api_key = _credential(self.config.api_key_env)
-        filters = [{
-            "channel": channel,
-            **({"symbols": list(symbols)} if symbols else {}),
-        } for channel in channels]
+        filters = [
+            {
+                "channel": channel,
+                **({"symbols": list(symbols)} if symbols else {}),
+            }
+            for channel in channels
+        ]
         params = {
             "from": from_iso,
             "offset": offset_minutes,
@@ -105,28 +136,92 @@ class TardisAdapter:
         payload = response.content
         if response.headers.get("Content-Encoding", "").lower() == "gzip":
             payload = gzip.decompress(payload)
-        events = []
-        for line in io.BytesIO(payload).read().splitlines():
-            if not line.strip():
+
+        events: list[dict[str, Any]] = []
+        for raw_line in payload.splitlines(keepends=False):
+            if not raw_line.strip():
+                # Tardis uses empty NDJSON lines as disconnect markers.
+                events.append({"disconnect": True})
                 continue
-            local_ts, raw = line.split(maxsplit=1)
-            message = json.loads(raw)
-            events.append({
-                "capture_time": local_ts,
-                "message": message,
-            })
+            local_ts, raw = raw_line.split(maxsplit=1)
+            events.append(
+                {
+                    "capture_time": local_ts,
+                    "message": json.loads(raw),
+                }
+            )
         return events
 
 
 def parse_tardis_events(events: list[dict[str, Any]]) -> pd.DataFrame:
-    """Flatten the adapter envelope without inventing exchange fields."""
-    rows = []
+    """Flatten the transport envelope while preserving native event fields."""
+    rows: list[dict[str, Any]] = []
     for event in events:
-        rows.append({
-            "capture_time": event["capture_time"],
-            "message": event["message"],
-        })
-    return pd.DataFrame(rows, columns=["capture_time", "message"])
+        if event.get("disconnect"):
+            rows.append(
+                {
+                    "capture_time": None,
+                    "message": None,
+                    "disconnect": True,
+                }
+            )
+        else:
+            rows.append(
+                {
+                    "capture_time": event["capture_time"],
+                    "message": event["message"],
+                    "disconnect": False,
+                }
+            )
+    return pd.DataFrame(
+        rows,
+        columns=["capture_time", "message", "disconnect"],
+    )
+
+
+def normalize_binance_book_ticker(events: list[dict[str, Any]]) -> pd.DataFrame:
+    """Normalize Binance Spot bookTicker messages after raw capture.
+
+    Binance-native fields are mapped, not recomputed:
+    s=symbol, E=exchange event time, b/B=bid price/qty, a/A=ask price/qty.
+    Tardis capture_time is retained separately for provenance.
+    """
+    rows: list[dict[str, Any]] = []
+    for event in events:
+        if event.get("disconnect"):
+            continue
+        message = event["message"]
+        if message.get("e") not in (None, "bookTicker"):
+            continue
+        rows.append(
+            {
+                "capture_time": event["capture_time"],
+                "event_time_ms": message.get("E"),
+                "symbol": message.get("s"),
+                "bid_price": message.get("b"),
+                "bid_qty": message.get("B"),
+                "ask_price": message.get("a"),
+                "ask_qty": message.get("A"),
+                "update_id": message.get("u"),
+                "source": "tardis",
+                "exchange": "binance",
+            }
+        )
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "capture_time",
+            "event_time_ms",
+            "symbol",
+            "bid_price",
+            "bid_qty",
+            "ask_price",
+            "ask_qty",
+            "update_id",
+            "source",
+            "exchange",
+        ],
+    )
 
 
 def utc_iso(value: datetime) -> str:
