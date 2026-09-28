@@ -255,4 +255,10 @@ EXTENSION_DATASETS: Final[tuple[str, ...]] = (
     "hedge_latency",
     "uncertainty_intervals",
     "counterfactual_scenarios",
+    "empirical_block_intervals",
+    "price_jump_regimes",
+    "lvr_rvr_diagnostics",
+    "builder_auction_observations",
+    "paper_markout_vs_executable_pnl",
+    "provenance_and_contract_verification",
 )
