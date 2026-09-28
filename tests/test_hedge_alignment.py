@@ -37,7 +37,7 @@ def test_latest_non_stale_quote_is_attached():
         max_age_ms=200,
     )
     assert out.iloc[0]["ask_price"] == Decimal("101")
-    assert out.iloc[0]["quote_stale"] is False
+    assert not bool(out.iloc[0]["quote_stale"])
     assert out.iloc[0]["alignment_method"] == "backward_latest_same_symbol"
 
 
@@ -48,7 +48,7 @@ def test_stale_quote_is_not_used():
         max_age_ms=50,
     )
     assert pd.isna(out.iloc[0]["bid_price"])
-    assert out.iloc[0]["quote_stale"] is True
+    assert bool(out.iloc[0]["quote_stale"])
 
 
 def test_cross_symbol_quotes_are_never_attached():
