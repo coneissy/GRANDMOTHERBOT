@@ -15,7 +15,7 @@ def test_simulator_uses_executable_price_fee_and_partial_fill():
         mid=Decimal("100"),
         order_book=book,
         taker_fee_bps=Decimal("15"),
-        markout_usd=Decimal("5"),
+        future_mid=Decimal("102"),
     )
 
     assert result["side"] == "sell"
@@ -24,4 +24,4 @@ def test_simulator_uses_executable_price_fee_and_partial_fill():
     assert result["unfilled_qty"] == Decimal("1")
     assert result["fully_filled"] is False
     assert result["cex_fee_usd"] == Decimal("0.1515")
-    assert result["markout_vs_execution_usd"] == Decimal("4.8485")
+    assert result["markout_pnl_usd"] == Decimal("0.8485")
