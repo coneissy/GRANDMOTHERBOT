@@ -11,7 +11,7 @@ def row(**overrides):
         "block_number": 18000000,
         "slot_time": "2024-01-01T00:00:00Z",
         "from_address": "0x1111111111111111111111111111111111111111",
-        "observed_public_mempool": True,
+        "observed_public_mempool": False,
         "first_swap_in_pool_direction": True,
         "atomic_mev": False,
         "liquidation": False,
