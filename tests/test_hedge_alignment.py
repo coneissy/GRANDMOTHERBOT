@@ -10,40 +10,64 @@ from grandmotherbot_extension.hedge_alignment import (
 )
 
 
-def test_latest_non_stale_quote_is_attached():
-    swaps = pd.DataFrame([{
+def _swap(time="2025-01-01T00:00:01Z", symbol="ETHUSDT"):
+    return {
         "tx_hash": "0x1",
         "block_time": "2025-01-01T00:00:01Z",
-    }])
-    quotes = pd.DataFrame([{
-        "event_time": "2025-01-01T00:00:00.900Z",
-        "symbol": "ETHUSDT",
+        "event_time": time,
+        "cex_symbol": symbol,
+    }
+
+
+def _quote(time="2025-01-01T00:00:00.900Z", symbol="ETHUSDT"):
+    return {
+        "event_time": time,
+        "symbol": symbol,
         "bid_price": Decimal("99"),
         "ask_price": Decimal("101"),
         "bid_qty": Decimal("2"),
         "ask_qty": Decimal("3"),
-    }])
-    out = align_quotes_to_swaps(swaps, quotes, max_age_ms=200)
+    }
+
+
+def test_latest_non_stale_quote_is_attached():
+    out = align_quotes_to_swaps(
+        pd.DataFrame([_swap()]),
+        pd.DataFrame([_quote()]),
+        max_age_ms=200,
+    )
     assert out.iloc[0]["ask_price"] == Decimal("101")
     assert out.iloc[0]["quote_stale"] is False
+    assert out.iloc[0]["alignment_method"] == "backward_latest_same_symbol"
 
 
 def test_stale_quote_is_not_used():
-    swaps = pd.DataFrame([{
-        "tx_hash": "0x1",
-        "block_time": "2025-01-01T00:00:02Z",
-    }])
-    quotes = pd.DataFrame([{
-        "event_time": "2025-01-01T00:00:00Z",
-        "symbol": "ETHUSDT",
-        "bid_price": Decimal("99"),
-        "ask_price": Decimal("101"),
-        "bid_qty": Decimal("2"),
-        "ask_qty": Decimal("3"),
-    }])
-    out = align_quotes_to_swaps(swaps, quotes, max_age_ms=500)
+    out = align_quotes_to_swaps(
+        pd.DataFrame([_swap()]),
+        pd.DataFrame([_quote(time="2025-01-01T00:00:00Z")]),
+        max_age_ms=50,
+    )
     assert pd.isna(out.iloc[0]["bid_price"])
     assert out.iloc[0]["quote_stale"] is True
+
+
+def test_cross_symbol_quotes_are_never_attached():
+    out = align_quotes_to_swaps(
+        pd.DataFrame([_swap(symbol="ETHUSDT")]),
+        pd.DataFrame([_quote(symbol="BTCUSDT")]),
+        max_age_ms=1000,
+    )
+    assert pd.isna(out.iloc[0]["bid_price"])
+
+
+def test_explicit_event_time_is_required():
+    swaps = pd.DataFrame([{
+        "tx_hash": "0x1",
+        "block_time": "2025-01-01T00:00:01Z",
+        "cex_symbol": "ETHUSDT",
+    }])
+    with pytest.raises(ValueError):
+        align_quotes_to_swaps(swaps, pd.DataFrame([_quote()]))
 
 
 def test_hedge_direction_offsets_inventory():
