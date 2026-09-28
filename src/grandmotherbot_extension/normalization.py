@@ -97,7 +97,9 @@ def _event_time_from_binance_message(message: dict[str, Any]) -> str:
         int(event_ms) / 1000,
         tz=timezone.utc,
     )
-    return timestamp.isoformat().replace("+00:00", "Z")
+    # Binance bookTicker E is millisecond precision. Keep the normalized
+    # representation at that precision so source timestamps are deterministic.
+    return timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
 def normalize_book_ticker(
