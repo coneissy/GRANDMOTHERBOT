@@ -26,30 +26,39 @@ def test_dex_swap_normalization_preserves_identity():
     assert frame.iloc[0]["amount_in"] == Decimal("1.5")
 
 
-def test_tardis_book_ticker_normalization():
+def test_tardis_book_ticker_normalization_uses_exchange_event_time():
     frame = normalize_book_ticker([{
-        "capture_time": "2025-01-01T00:00:00Z",
+        "capture_time": "2025-01-01T00:00:00.100Z",
         "message": {
-            "bidPrice": "100.0",
-            "askPrice": "100.1",
-            "bidQty": "3",
-            "askQty": "4",
+            "e": "bookTicker",
+            "E": 1735689600100,
+            "s": "ETHUSDT",
+            "b": "100.0",
+            "a": "100.1",
+            "B": "3",
+            "A": "4",
         },
-    }], symbol="ETHUSDT")
+    }])
     validate_quote_frame(frame)
+    assert frame.iloc[0]["symbol"] == "ETHUSDT"
+    assert frame.iloc[0]["event_time"] == "2025-01-01T00:00:00.100Z"
     assert frame.iloc[0]["bid_price"] == Decimal("100.0")
     assert frame.iloc[0]["ask_qty"] == Decimal("4")
+    assert frame.iloc[0]["capture_time"] == "2025-01-01T00:00:00.100Z"
 
 
 def test_invalid_crossed_market_is_rejected():
     frame = normalize_book_ticker([{
         "capture_time": "2025-01-01T00:00:00Z",
         "message": {
-            "bidPrice": "101",
-            "askPrice": "100",
-            "bidQty": "1",
-            "askQty": "1",
+            "e": "bookTicker",
+            "E": 1735689600000,
+            "s": "ETHUSDT",
+            "b": "101",
+            "a": "100",
+            "B": "1",
+            "A": "1",
         },
-    }], symbol="ETHUSDT")
+    }])
     with pytest.raises(ValueError):
         validate_quote_frame(frame)
