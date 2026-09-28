@@ -12,6 +12,7 @@ dependencies = [
   "numpy>=1.26",
   "matplotlib>=3.8",
   "requests>=2.32",
+  "dune-client>=1.11.0",
 ]
 
 [project.optional-dependencies]
