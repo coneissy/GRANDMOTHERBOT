@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
@@ -53,28 +54,56 @@ def normalize_swaps(rows: list[dict[str, Any]]) -> pd.DataFrame:
     return pd.DataFrame(normalized, columns=columns)
 
 
+def _event_time_from_binance_message(message: dict[str, Any]) -> str:
+    event_ms = message.get("E")
+    if event_ms is None:
+        raise ValueError("Binance bookTicker message missing exchange event time E")
+    timestamp = datetime.fromtimestamp(
+        int(event_ms) / 1000,
+        tz=timezone.utc,
+    )
+    return timestamp.isoformat().replace("+00:00", "Z")
+
+
 def normalize_book_ticker(
     events: list[dict[str, Any]],
     *,
-    symbol: str,
+    symbol: str | None = None,
 ) -> pd.DataFrame:
+    """Normalize Binance Spot native bookTicker messages.
+
+    Tardis capture_time is retained separately from Binance's exchange event
+    time. Prices and quantities are parsed from Binance native fields b/B/a/A.
+    """
+    columns = [
+        "exchange", "symbol", "event_time", "capture_time",
+        "bid_price", "ask_price", "bid_qty", "ask_qty", "source",
+    ]
     rows = []
     for event in events:
+        if event.get("disconnect"):
+            continue
         message = event["message"]
+        if message.get("e") not in (None, "bookTicker"):
+            continue
+        message_symbol = message.get("s")
+        if symbol is not None and message_symbol not in (None, symbol):
+            continue
+        resolved_symbol = str(message_symbol or symbol or "")
+        if not resolved_symbol:
+            raise ValueError("Binance bookTicker event missing symbol")
         rows.append({
             "exchange": "binance",
-            "symbol": symbol,
-            "event_time": str(event["capture_time"]),
-            "bid_price": Decimal(str(message["bidPrice"])),
-            "ask_price": Decimal(str(message["askPrice"])),
-            "bid_qty": Decimal(str(message["bidQty"])),
-            "ask_qty": Decimal(str(message["askQty"])),
+            "symbol": resolved_symbol,
+            "event_time": _event_time_from_binance_message(message),
+            "capture_time": str(event["capture_time"]),
+            "bid_price": Decimal(str(message["b"])),
+            "ask_price": Decimal(str(message["a"])),
+            "bid_qty": Decimal(str(message["B"])),
+            "ask_qty": Decimal(str(message["A"])),
             "source": "tardis",
         })
-    return pd.DataFrame(rows, columns=[
-        "exchange", "symbol", "event_time", "bid_price", "ask_price",
-        "bid_qty", "ask_qty", "source",
-    ])
+    return pd.DataFrame(rows, columns=columns)
 
 
 def validate_quote_frame(frame: pd.DataFrame) -> None:
