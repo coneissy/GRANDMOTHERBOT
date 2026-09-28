@@ -84,7 +84,7 @@ def test_inventory_adjustment_is_excluded_from_markout_observation():
         Decimal("100"),
         Decimal("0"),
         points,
-        Decimal("1"),
+        Decimal("2"),
     )
     assert inventory_adjustment_like_observation(obs)
 
