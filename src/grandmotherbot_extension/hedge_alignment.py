@@ -1,13 +1,8 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Any
 
 import pandas as pd
-
-
-def _d(value: Any) -> Decimal:
-    return Decimal(str(value))
 
 
 def align_quotes_to_swaps(
@@ -16,13 +11,7 @@ def align_quotes_to_swaps(
     *,
     max_age_ms: int = 1000,
 ) -> pd.DataFrame:
-    """Attach the latest non-stale Binance quote using explicit event time.
-
-    Extension-only. Paper replication inputs and markout horizons are untouched.
-    A DEX swap must provide event_time for execution-aware alignment. block_time
-    remains metadata only because block timestamps do not identify the precise
-    swap event within a block.
-    """
+    """Attach the latest non-stale Binance quote using explicit event time."""
     required_swaps = {"tx_hash", "block_time", "event_time", "cex_symbol"}
     required_quotes = {
         "event_time", "symbol", "bid_price", "ask_price", "bid_qty", "ask_qty"
@@ -36,7 +25,6 @@ def align_quotes_to_swaps(
 
     left = swaps.copy()
     right = quotes.copy()
-
     left["_time"] = pd.to_datetime(left["event_time"], utc=True)
     right["_time"] = pd.to_datetime(right["event_time"], utc=True)
 
@@ -46,8 +34,10 @@ def align_quotes_to_swaps(
     left["cex_symbol"] = left["cex_symbol"].astype(str).str.upper()
     right["symbol"] = right["symbol"].astype(str).str.upper()
 
-    right = right.sort_values(["symbol", "_time"])
-    left = left.sort_values(["cex_symbol", "_time"])
+    # pandas merge_asof requires the time key itself to be globally sorted,
+    # even when a by-key partitions the matching operation.
+    right = right.sort_values(["_time", "symbol"]).reset_index(drop=True)
+    left = left.sort_values(["_time", "cex_symbol"]).reset_index(drop=True)
 
     out = pd.merge_asof(
         left,
@@ -62,15 +52,14 @@ def align_quotes_to_swaps(
 
     out["quote_age_ms"] = (
         (out["_time"] - pd.to_datetime(out["event_time_y"], utc=True))
-        .dt.total_seconds()
-        * 1000
+        .dt.total_seconds() * 1000
     )
     out["quote_stale"] = out["bid_price"].isna()
     out["quote_time_source"] = "dex_event_time"
     out["alignment_method"] = "backward_latest_same_symbol"
     return out.drop(columns=["_time"])
- 
- 
+
+
 def hedge_side_from_inventory(*, inventory_delta: Decimal) -> str:
     if inventory_delta == 0:
         raise ValueError("inventory_delta cannot be zero")
