@@ -23,21 +23,12 @@ def _d(value) -> Decimal:
     return Decimal(str(value))
 
 
-def dynamic_horizons(
-    start_s: float = -1.0,
-    end_s: float = 10.0,
-    step_s: float = 0.25,
-) -> tuple[Decimal, ...]:
-    """Build an extension-only horizon grid.
-
-    The paper's -1..10/0.5 grid is never changed by this function.
-    """
+def dynamic_horizons(start_s: float = -1.0, end_s: float = 10.0, step_s: float = 0.25) -> tuple[Decimal, ...]:
     if step_s <= 0:
         raise ValueError("step_s must be positive")
     start, end, step = _d(start_s), _d(end_s), _d(step_s)
     if end < start:
         raise ValueError("end_s must be >= start_s")
-
     points = []
     current = start
     while current <= end:
@@ -51,22 +42,21 @@ def executable_price_from_book(
     side: str,
     quantity: Decimal,
 ) -> tuple[Decimal, Decimal]:
-    """Return VWAP and filled quantity from a level-2 order book.
-
-    Expected columns: price, quantity. Buy consumes asks; sell consumes bids.
-    """
+    """Return VWAP and filled quantity from executable L2 liquidity."""
     if quantity <= 0:
         raise ValueError("quantity must be positive")
     side = side.lower()
     if side not in {"buy", "sell"}:
         raise ValueError("side must be buy or sell")
-
     required = {"price", "quantity"}
     missing = required - set(book.columns)
     if missing:
         raise ValueError("order book missing: " + ", ".join(sorted(missing)))
 
     work = book.copy()
+    if "side" in work.columns:
+        work["side"] = work["side"].astype(str).str.lower()
+        work = work[work["side"] == ("ask" if side == "buy" else "bid")]
     work["price"] = work["price"].map(_d)
     work["quantity"] = work["quantity"].map(_d)
     work = work[(work["price"] > 0) & (work["quantity"] > 0)]
@@ -82,7 +72,6 @@ def executable_price_from_book(
         remaining -= take
         if remaining <= 0:
             break
-
     if filled <= 0:
         raise ValueError("order book has no executable liquidity")
     return notional / filled, filled
@@ -102,7 +91,6 @@ def evaluate_dynamic_hedge(
     order_book: pd.DataFrame,
     taker_fee_bps: Decimal,
 ) -> dict[str, Decimal]:
-    """Estimate hedge cost from executable liquidity and taker fees."""
     execution_price, filled = executable_price_from_book(order_book, side, amount)
     fee = filled * execution_price * taker_fee_bps / Decimal("10000")
     slip = slippage_bps(mid, execution_price)
@@ -118,7 +106,6 @@ def evaluate_dynamic_hedge(
 
 
 def dynamic_markout(observations: Iterable[HedgeObservation]) -> pd.DataFrame:
-    """Normalize extension observations without touching paper markouts."""
     rows = [{
         "horizon_s": float(o.horizon_s),
         "token_usdt_mid": float(o.token_usdt_mid),
@@ -134,19 +121,13 @@ def dynamic_markout(observations: Iterable[HedgeObservation]) -> pd.DataFrame:
 
 
 def choose_dynamic_horizon(curve: pd.DataFrame) -> Decimal:
-    """Choose the extension horizon maximizing net hedge value."""
     required = {"horizon_s", "markout_usd", "cex_fee_usd", "slippage_cost_usd"}
     missing = required - set(curve.columns)
     if missing:
         raise ValueError("curve missing: " + ", ".join(sorted(missing)))
     if curve.empty:
         raise ValueError("curve is empty")
-
     work = curve.copy()
-    work["objective"] = (
-        work["markout_usd"] - work["cex_fee_usd"] - work["slippage_cost_usd"]
-    )
-    best = work.sort_values(
-        ["objective", "horizon_s"], ascending=[False, True]
-    ).iloc[0]
+    work["objective"] = work["markout_usd"] - work["cex_fee_usd"] - work["slippage_cost_usd"]
+    best = work.sort_values(["objective", "horizon_s"], ascending=[False, True]).iloc[0]
     return _d(best["horizon_s"])
