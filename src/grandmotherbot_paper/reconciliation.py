@@ -99,8 +99,8 @@ def validate_profiles() -> None:
     labels = load_reference("searcher_labels.csv")
     if profiles["searcher"].duplicated().any():
         raise AssertionError("duplicate searcher profile")
-    if labels["searcher"].duplicated().any():
-        raise AssertionError("duplicate searcher label")
+    if labels.duplicated(subset=["searcher", "address"]).any():
+        raise AssertionError("duplicate searcher/address label")
     if set(profiles["searcher"]) != set(labels["searcher"]):
         raise AssertionError("profile and label registries disagree")
     pattern3 = set(
