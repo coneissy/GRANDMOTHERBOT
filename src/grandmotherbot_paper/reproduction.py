@@ -71,7 +71,136 @@ def reconstruct(swaps: pd.DataFrame):
     }
 
 
+def validate_markout_data_contract(markouts: pd.DataFrame) -> None:
+    """Fail closed before paper markout observations are constructed.
+
+    This protects the locked 23-point paper window from duplicate, malformed,
+    cross-pipeline, or explicitly mis-provenanced CEX observations. Provenance
+    is enforced when its metadata is supplied; an absent provenance column is
+    reported as an upstream data-readiness gap rather than silently inferred.
+    """
+    required = {
+        "tx_hash",
+        "horizon_s",
+        "amount_a",
+        "amount_b",
+        "dex_volume_usd",
+        "cex_taker_fees_usd",
+        "token_a_usdt_mid",
+        "token_b_usdt_mid",
+    }
+    missing = required - set(markouts.columns)
+    if missing:
+        raise ValueError(
+            "markout data missing required columns: "
+            + ", ".join(sorted(missing))
+        )
+
+    if markouts.empty:
+        raise ValueError("markout data must not be empty")
+
+    horizons = {
+        Decimal(str(value))
+        for value in markouts["horizon_s"].dropna().tolist()
+    }
+    invalid_horizons = horizons - set(HORIZONS)
+    if invalid_horizons:
+        raise ValueError(
+            "markout data contains horizons outside the locked grid: "
+            + ", ".join(sorted(map(str, invalid_horizons)))
+        )
+
+    duplicate_mask = markouts.duplicated(
+        subset=["tx_hash", "horizon_s"],
+        keep=False,
+    )
+    if duplicate_mask.any():
+        duplicates = (
+            markouts.loc[duplicate_mask, ["tx_hash", "horizon_s"]]
+            .drop_duplicates()
+            .to_dict("records")
+        )
+        raise ValueError(
+            "duplicate (tx_hash, horizon_s) observations are not allowed: "
+            + str(duplicates[:5])
+        )
+
+    for tx_hash, group in markouts.groupby("tx_hash"):
+        tx_horizons = {Decimal(str(v)) for v in group["horizon_s"].tolist()}
+        if len(tx_horizons) != len(HORIZONS) or tx_horizons != set(HORIZONS):
+            missing_horizons = sorted(set(HORIZONS) - tx_horizons)
+            raise ValueError(
+                f"tx_hash={tx_hash} does not contain exactly the locked "
+                f"23-horizon grid; missing={missing_horizons}"
+            )
+
+    numeric_columns = [
+        "amount_a",
+        "amount_b",
+        "dex_volume_usd",
+        "cex_taker_fees_usd",
+        "token_a_usdt_mid",
+        "token_b_usdt_mid",
+    ]
+    for column in numeric_columns:
+        values = pd.to_numeric(markouts[column], errors="coerce")
+        if values.isna().any():
+            raise ValueError(f"markout column {column} contains non-numeric values")
+
+    for column in ("token_a_usdt_mid", "token_b_usdt_mid", "dex_volume_usd"):
+        values = pd.to_numeric(markouts[column], errors="coerce")
+        if (values <= 0).any():
+            raise ValueError(f"markout column {column} must contain only positive values")
+
+    for column in ("amount_a", "amount_b", "cex_taker_fees_usd"):
+        values = pd.to_numeric(markouts[column], errors="coerce")
+        if (values < 0).any():
+            raise ValueError(f"markout column {column} must contain only non-negative values")
+
+    if "dataset_type" in markouts.columns:
+        dataset_types = set(markouts["dataset_type"].dropna().astype(str))
+        if dataset_types - {"paper_replication"}:
+            raise ValueError(
+                "paper markout pipeline received non-paper dataset_type values: "
+                + ", ".join(sorted(dataset_types - {"paper_replication"}))
+            )
+
+    if "pipeline" in markouts.columns:
+        pipelines = set(markouts["pipeline"].dropna().astype(str))
+        if pipelines - {"paper_replication"}:
+            raise ValueError(
+                "paper markout pipeline received non-paper pipeline values: "
+                + ", ".join(sorted(pipelines - {"paper_replication"}))
+            )
+
+    if "source" in markouts.columns:
+        sources = set(markouts["source"].dropna().astype(str).str.lower())
+        if sources - {"tardis"}:
+            raise ValueError(
+                "paper_replication markouts cannot use non-Tardis quote sources: "
+                + ", ".join(sorted(sources - {"tardis"}))
+            )
+
+    if "quote_source" in markouts.columns:
+        sources = set(markouts["quote_source"].dropna().astype(str).str.lower())
+        if sources - {"tardis"}:
+            raise ValueError(
+                "paper_replication markouts cannot use non-Tardis quote sources: "
+                + ", ".join(sorted(sources - {"tardis"}))
+            )
+
+    if "exchange" in markouts.columns:
+        exchanges = set(markouts["exchange"].dropna().astype(str).str.lower())
+        if exchanges - {"binance"}:
+            raise ValueError(
+                "paper_replication markouts cannot use non-Binance exchanges: "
+                + ", ".join(sorted(exchanges - {"binance"}))
+            )
+
+
 def build_observations(markouts: pd.DataFrame) -> dict[str, TradeObservation]:
+    validate_markout_data_contract(markouts)
+
     out = {}
     for tx_hash, group in markouts.groupby("tx_hash"):
         ordered = group.sort_values("horizon_s")
